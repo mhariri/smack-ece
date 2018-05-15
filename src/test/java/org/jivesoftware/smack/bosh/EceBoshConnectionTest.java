@@ -42,7 +42,7 @@ public class EceBoshConnectionTest {
                 .setXmppDomain("xyz")
                 .setFile("/")
                 .build();
-        connection = new EceBoshConnection(config);
+        connection = new EceBoshConnection(config, "customer", "subject");
         client = mock(BOSHClient.class);
     }
 

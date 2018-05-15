@@ -1,18 +1,41 @@
 package org.jivesoftware.smack.bosh;
 
 import com.google.common.io.CharStreams;
-import org.igniterealtime.jbosh.*;
+
+import org.apache.commons.text.StringEscapeUtils;
+import org.igniterealtime.jbosh.AbstractBody;
+import org.igniterealtime.jbosh.BOSHClient;
+import org.igniterealtime.jbosh.BOSHClientConfig;
+import org.igniterealtime.jbosh.BOSHClientConnEvent;
+import org.igniterealtime.jbosh.BOSHClientConnListener;
+import org.igniterealtime.jbosh.BOSHClientRequestListener;
+import org.igniterealtime.jbosh.BOSHClientResponseListener;
+import org.igniterealtime.jbosh.BOSHException;
+import org.igniterealtime.jbosh.BOSHMessageEvent;
+import org.igniterealtime.jbosh.BodyQName;
+import org.igniterealtime.jbosh.ComposableBody;
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
-import org.jivesoftware.smack.packet.*;
+import org.jivesoftware.smack.packet.Element;
+import org.jivesoftware.smack.packet.IQ;
+import org.jivesoftware.smack.packet.Message;
+import org.jivesoftware.smack.packet.Nonza;
+import org.jivesoftware.smack.packet.Presence;
+import org.jivesoftware.smack.packet.Stanza;
+import org.jivesoftware.smack.packet.XMPPError;
 import org.jivesoftware.smack.sasl.packet.SaslStreamElements;
 import org.jivesoftware.smack.util.PacketParserUtils;
 import org.jxmpp.jid.parts.Resourcepart;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import java.io.*;
+import java.io.IOException;
+import java.io.InputStreamReader;
+import java.io.PipedReader;
+import java.io.PipedWriter;
+import java.io.StringReader;
+import java.io.Writer;
 import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,6 +54,9 @@ public class EceBoshConnection extends AbstractXMPPConnection {
     public static final String EGAIN_FROM = "from";
     public static final String EGAIN_AUTHID = "authid";
     private static final Logger LOGGER = Logger.getLogger(EceBoshConnection.class.getName());
+    private static final String CUSTOMER_NAME_TOKEN = "$$CUSTOMER_NAME$$";
+    private static final String SUBJECT_TOKEN = "$$SUBJECT$$";
+
     /**
      * Holds the initial configuration used while creating the connection.
      */
@@ -39,6 +65,8 @@ public class EceBoshConnection extends AbstractXMPPConnection {
      * The session ID for the BOSH session with the connection manager.
      */
     protected String sessionID = null;
+    private String customerName;
+    private String subject;
     /**
      * The used BOSH client from the jbosh library.
      */
@@ -56,8 +84,10 @@ public class EceBoshConnection extends AbstractXMPPConnection {
      * Create a HTTP Binding connection to an XMPP server.
      *
      * @param config The configuration which is used for this connection.
+     * @param customerName that appears in agent's view
+     * @param subject      of the chat, appears as the first chat message for the agent
      */
-    public EceBoshConnection(BOSHConfiguration config) {
+    public EceBoshConnection(BOSHConfiguration config, String customerName, String subject) {
         super(config);
         this.config = config;
 
@@ -65,6 +95,8 @@ public class EceBoshConnection extends AbstractXMPPConnection {
             egainParams = CharStreams.toString(
                     new InputStreamReader(
                             getClass().getResourceAsStream("/egain_params.xml")));
+            egainParams = egainParams.replace(CUSTOMER_NAME_TOKEN, StringEscapeUtils.escapeXml11(customerName));
+            egainParams = egainParams.replace(SUBJECT_TOKEN, StringEscapeUtils.escapeXml11(subject));
         } catch (IOException e) {
             throw new RuntimeException(e);
         }

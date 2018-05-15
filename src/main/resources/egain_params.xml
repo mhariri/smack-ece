@@ -4,7 +4,7 @@
         <mapping>
             <attributeName>full_name</attributeName>
             <objectName>casemgmt::individual_customer_data</objectName>
-            <attributeValue>asd</attributeValue>
+            <attributeValue>$$CUSTOMER_NAME$$</attributeValue>
             <validationString/>
             <primaryKey>0</primaryKey>
             <minLength>1</minLength>
@@ -43,7 +43,7 @@
         <mapping>
             <attributeName>subject</attributeName>
             <objectName>casemgmt::activity_data</objectName>
-            <attributeValue>asd</attributeValue>
+            <attributeValue>$$SUBJECT$$</attributeValue>
             <validationString/>
             <primaryKey>0</primaryKey>
             <minLength>1</minLength>
