@@ -16,13 +16,14 @@
 
 package org.igniterealtime.jbosh;
 
-import javax.xml.XMLConstants;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
+import javax.xml.XMLConstants;
 
 /**
  * Implementation of the {@code AbstractBody} class which allows for the
@@ -109,7 +110,6 @@ public final class ComposableBody extends AbstractBody {
      *
      * @param body static body instance to convert
      * @return composable body instance
-     * @throws BOSHException
      */
     static ComposableBody fromStaticBody(final StaticBody body)
             throws BOSHException {

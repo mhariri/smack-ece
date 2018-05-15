@@ -16,8 +16,9 @@
 
 package org.igniterealtime.jbosh;
 
-import javax.net.ssl.SSLContext;
 import java.net.URI;
+
+import javax.net.ssl.SSLContext;
 
 /**
  * BOSH client configuration information.  Instances of this class contain

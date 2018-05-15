@@ -83,7 +83,7 @@ public class EceBoshConnection extends AbstractXMPPConnection {
     /**
      * Create a HTTP Binding connection to an XMPP server.
      *
-     * @param config The configuration which is used for this connection.
+     * @param config       The configuration which is used for this connection.
      * @param customerName that appears in agent's view
      * @param subject      of the chat, appears as the first chat message for the agent
      */
@@ -145,7 +145,9 @@ public class EceBoshConnection extends AbstractXMPPConnection {
                 final long deadline = System.currentTimeMillis() + getReplyTimeout();
                 while (!notified) {
                     final long now = System.currentTimeMillis();
-                    if (now >= deadline) break;
+                    if (now >= deadline) {
+                        break;
+                    }
                     wait(deadline - now);
                 }
             }
@@ -279,7 +281,6 @@ public class EceBoshConnection extends AbstractXMPPConnection {
      * Send a HTTP request to the connection manager with the provided body element.
      *
      * @param body the body which will be sent.
-     * @throws BOSHException
      */
     protected void send(ComposableBody body) throws BOSHException {
         if (!connected) {

@@ -20,13 +20,14 @@ import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlPullParserFactory;
 
-import javax.xml.XMLConstants;
-import javax.xml.namespace.QName;
 import java.io.IOException;
 import java.io.StringReader;
 import java.lang.ref.SoftReference;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+
+import javax.xml.XMLConstants;
+import javax.xml.namespace.QName;
 
 /**
  * Implementation of the BodyParser interface which uses the XmlPullParser

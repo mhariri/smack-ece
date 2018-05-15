@@ -18,8 +18,19 @@ package org.igniterealtime.jbosh;
 
 import org.igniterealtime.jbosh.ComposableBody.Builder;
 
-import java.util.*;
-import java.util.concurrent.*;
+import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.LinkedList;
+import java.util.List;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
+import java.util.concurrent.CopyOnWriteArraySet;
+import java.util.concurrent.Executors;
+import java.util.concurrent.RejectedExecutionException;
+import java.util.concurrent.ScheduledExecutorService;
+import java.util.concurrent.ScheduledFuture;
+import java.util.concurrent.TimeUnit;
 import java.util.concurrent.atomic.AtomicReference;
 import java.util.concurrent.locks.Condition;
 import java.util.concurrent.locks.ReentrantLock;
@@ -1032,8 +1043,9 @@ public final class BOSHClient {
                                 + exch.getRequest().getAttribute(Attributes.RID));
             }
         } else {
-            if (LOG.isLoggable(Level.FINEST))
+            if (LOG.isLoggable(Level.FINEST)) {
                 LOG.finest("Thread " + idx + " will wait for new request...");
+            }
         }
 
         return exch;
@@ -1052,8 +1064,9 @@ public final class BOSHClient {
         assertLocked();
 
         for (RequestProcessor reqProc : procThreads) {
-            if (exch == reqProc.procExchange)
+            if (exch == reqProc.procExchange) {
                 return reqProc;
+            }
         }
 
         return null;
@@ -1072,10 +1085,11 @@ public final class BOSHClient {
         AbstractBody body;
         int respCode;
         try {
-            if (LOG.isLoggable(Level.FINEST))
+            if (LOG.isLoggable(Level.FINEST)) {
                 LOG.finest(
                         "Thread " + idx + " is sending "
                                 + exch.getRequest().getAttribute(Attributes.RID));
+            }
 
             resp = exch.getHTTPResponse();
             body = resp.getBody();
@@ -1083,8 +1097,9 @@ public final class BOSHClient {
 
             if (LOG.isLoggable(Level.FINEST)) {
                 String respRid = body.getAttribute(Attributes.RID);
-                if (respRid == null)
+                if (respRid == null) {
                     respRid = exch.getRequest().getAttribute(Attributes.RID);
+                }
                 LOG.finest(
                         "Thread " + idx + " received response"
                                 + " for RID: " + respRid

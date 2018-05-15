@@ -54,6 +54,7 @@ final class Attributes {
     static final BodyQName WAIT = BodyQName.createBOSH("wait");
     static final BodyQName XML_LANG =
             BodyQName.createWithPrefix(XMLConstants.XML_NS_URI, "lang", "xml");
+
     /**
      * Private constructor to prevent construction of library class.
      */
