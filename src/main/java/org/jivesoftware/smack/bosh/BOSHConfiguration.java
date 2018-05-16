@@ -27,7 +27,6 @@ import java.net.URISyntaxException;
  * HTTP binding.
  *
  * @author Guenther Niess
- * @see XMPPBOSHConnection
  */
 public final class BOSHConfiguration extends ConnectionConfiguration {
 
