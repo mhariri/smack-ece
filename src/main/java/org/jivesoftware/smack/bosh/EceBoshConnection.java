@@ -17,6 +17,13 @@ import org.igniterealtime.jbosh.ComposableBody;
 import org.jivesoftware.smack.AbstractXMPPConnection;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
+import org.jivesoftware.smack.filter.AndFilter;
+import org.jivesoftware.smack.filter.FromTypeFilter;
+import org.jivesoftware.smack.filter.MessageTypeFilter;
+import org.jivesoftware.smack.filter.MessageWithBodiesFilter;
+import org.jivesoftware.smack.filter.OrFilter;
+import org.jivesoftware.smack.filter.StanzaExtensionFilter;
+import org.jivesoftware.smack.filter.StanzaFilter;
 import org.jivesoftware.smack.packet.Element;
 import org.jivesoftware.smack.packet.IQ;
 import org.jivesoftware.smack.packet.Message;
@@ -26,7 +33,12 @@ import org.jivesoftware.smack.packet.Stanza;
 import org.jivesoftware.smack.packet.XMPPError;
 import org.jivesoftware.smack.sasl.packet.SaslStreamElements;
 import org.jivesoftware.smack.util.PacketParserUtils;
+import org.jivesoftware.smackx.xhtmlim.packet.XHTMLExtension;
+import org.jxmpp.jid.EntityFullJid;
+import org.jxmpp.jid.Jid;
+import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.jid.parts.Resourcepart;
+import org.jxmpp.stringprep.XmppStringprepException;
 import org.xmlpull.v1.XmlPullParser;
 import org.xmlpull.v1.XmlPullParserFactory;
 
@@ -56,7 +68,12 @@ public class EceBoshConnection extends AbstractXMPPConnection {
     private static final Logger LOGGER = Logger.getLogger(EceBoshConnection.class.getName());
     private static final String CUSTOMER_NAME_TOKEN = "$$CUSTOMER_NAME$$";
     private static final String SUBJECT_TOKEN = "$$SUBJECT$$";
-
+    private static final StanzaFilter ECE_INCOMING_MESSAGE_FILTER = new AndFilter(
+            MessageTypeFilter.CHAT,
+            new OrFilter(MessageWithBodiesFilter.INSTANCE, new StanzaExtensionFilter(XHTMLExtension.ELEMENT,
+                    XHTMLExtension.NAMESPACE)),
+            new OrFilter(FromTypeFilter.DOMAIN_BARE_JID)
+    );
     /**
      * Holds the initial configuration used while creating the connection.
      */
@@ -65,8 +82,6 @@ public class EceBoshConnection extends AbstractXMPPConnection {
      * The session ID for the BOSH session with the connection manager.
      */
     protected String sessionID = null;
-    private String customerName;
-    private String subject;
     /**
      * The used BOSH client from the jbosh library.
      */
@@ -100,8 +115,31 @@ public class EceBoshConnection extends AbstractXMPPConnection {
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
-
     }
+
+    /**
+     * Modifies ECE's incoming chat message to conform to XMPP standard incoming
+     * chat message. Otherwise Smack will ignore the incoming message.
+     */
+    private void modifyIncomingChatMessage(Stanza packet) {
+        Message message = (Message) packet;
+        final Jid from = message.getFrom();
+
+        if(!from.isEntityFullJid()) {
+            final EntityFullJid bareFrom;
+            try {
+                bareFrom = JidCreate.entityFullFrom(convertEceIdToFullJid(from));
+            } catch (XmppStringprepException e) {
+                throw new RuntimeException(e);
+            }
+            message.setFrom(bareFrom);
+        }
+    }
+
+    private String convertEceIdToFullJid(Jid from) {
+        return from.toString().replace(" ", "_") + "@egain.com/xyz";
+    }
+
 
     protected void connectInternal(BOSHClient client) throws SmackException, InterruptedException {
 
@@ -391,6 +429,14 @@ public class EceBoshConnection extends AbstractXMPPConnection {
         // Closes the connection temporary. A reconnection is possible
         shutdown();
         callConnectionClosedOnErrorListener(e);
+    }
+
+    @Override
+    protected void invokeStanzaCollectorsAndNotifyRecvListeners(Stanza packet) {
+        if (ECE_INCOMING_MESSAGE_FILTER.accept(packet)) {
+            modifyIncomingChatMessage(packet);
+        }
+        super.invokeStanzaCollectorsAndNotifyRecvListeners(packet);
     }
 
     /**
