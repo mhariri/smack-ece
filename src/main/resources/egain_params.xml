@@ -54,16 +54,16 @@
     </param>
     <messagingData>&lt;![CDATA[cust_welcome_msg =An agent will be with you shortly.
 #  0 - Agent Screen Name
-agent_join_msg = You are now chatting with {0}
-system_close_session =System has closed the chat
+agent_join_msg = CHAT_STARTED
+system_close_session = CHAT_CLOSED
 #  0 - Agent Screen Name
-agent_left_session = {0} has left the chat
+agent_left_session = CHAT_CLOSED
 #  0 - Agent Screen Name
-agent_close_session = {0} has ended the chat
+agent_close_session = CHAT_CLOSED
 #  0 - Agent Screen Name
-typing_message ={0} is typing a message.
+typing_message = typing
 #  0 - KBArticle attachment file name
-attachment_msg = You have received an Attachment: {0}
+attachment_msg = attachment: {0}
 #  0 - title or url of the page pushed by Agent
 item_sent =Has sent a page - {0}
 newest_message =*** Newest Message ***
