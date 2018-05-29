@@ -180,6 +180,9 @@ public class EceBoshConnection extends AbstractXMPPConnection {
             if (config.isProxyEnabled()) {
                 cfgBuilder.setProxy(config.getProxyAddress(), config.getProxyPort());
             }
+            if (null != config.getCustomSSLContext()) {
+                cfgBuilder.setSSLContext(config.getCustomSSLContext());
+            }
             for (Header h : config.getHttpHeaders()) {
                 cfgBuilder.addHttpHeader(h);
             }
