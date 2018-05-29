@@ -16,11 +16,21 @@
 
 package org.jivesoftware.smack.bosh;
 
+import org.apache.commons.codec.binary.Base64;
+import org.apache.http.Header;
+import org.apache.http.HttpHeaders;
+import org.apache.http.message.BasicHeader;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.proxy.ProxyInfo;
 
+import java.io.UnsupportedEncodingException;
 import java.net.URI;
 import java.net.URISyntaxException;
+import java.net.URL;
+import java.net.URLDecoder;
+import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.List;
 
 /**
  * Configuration to use while establishing the connection to the XMPP server via
@@ -32,6 +42,7 @@ public final class BOSHConfiguration extends ConnectionConfiguration {
 
     private final boolean https;
     private final String file;
+    private List<Header> httpHeaders;
 
     private BOSHConfiguration(Builder builder) {
         super(builder);
@@ -47,6 +58,7 @@ public final class BOSHConfiguration extends ConnectionConfiguration {
         } else {
             file = builder.file;
         }
+        httpHeaders = builder.httpHeaders;
     }
 
     public static Builder builder() {
@@ -78,9 +90,14 @@ public final class BOSHConfiguration extends ConnectionConfiguration {
         return new URI((https ? "https://" : "http://") + this.host + ":" + this.port + file);
     }
 
+    public List<Header> getHttpHeaders() {
+        return httpHeaders;
+    }
+
     public static final class Builder extends ConnectionConfiguration.Builder<Builder, BOSHConfiguration> {
         private boolean https;
         private String file;
+        private List<Header> httpHeaders = new ArrayList<>();
 
         private Builder() {
         }
@@ -98,6 +115,44 @@ public final class BOSHConfiguration extends ConnectionConfiguration {
             this.file = file;
             return this;
         }
+
+        public Builder setServiceUrl(URL serviceUrl) {
+            this.setUseHttps(serviceUrl.getProtocol().equalsIgnoreCase("https"))
+                    .setHost(serviceUrl.getHost())
+                    .setPort(serviceUrl.getPort() == -1 ? serviceUrl.getDefaultPort() : serviceUrl.getPort())
+                    .setFile(serviceUrl.getFile())
+                    .addUserInfo(serviceUrl.getUserInfo());
+            return this;
+        }
+
+        public Builder addHttpHeader(Header header) {
+            httpHeaders.add(header);
+            return this;
+        }
+
+        private Builder addUserInfo(String userInfo) {
+            if(null == userInfo) {
+                return this;
+            }
+            String[] up = userInfo.split(":");
+            if (up.length != 2) {
+                throw new RuntimeException("Invalid user info in URL: " + userInfo);
+            }
+            try {
+                String username = URLDecoder.decode(up[0], "UTF-8");
+                String password = URLDecoder.decode(up[1], "UTF-8");
+                String auth = username + ":" + password;
+                byte[] encodedAuth = Base64.encodeBase64(
+                        auth.getBytes(StandardCharsets.ISO_8859_1));
+                String authHeader = "Basic " + new String(encodedAuth);
+
+                this.addHttpHeader(new BasicHeader(HttpHeaders.AUTHORIZATION, authHeader));
+            } catch (UnsupportedEncodingException e) {
+                throw new RuntimeException(e);
+            }
+            return this;
+        }
+
 
         @Override
         public BOSHConfiguration build() {

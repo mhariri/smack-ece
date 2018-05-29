@@ -3,6 +3,7 @@ package org.jivesoftware.smack.bosh;
 import com.google.common.io.CharStreams;
 
 import org.apache.commons.text.StringEscapeUtils;
+import org.apache.http.Header;
 import org.igniterealtime.jbosh.AbstractBody;
 import org.igniterealtime.jbosh.BOSHClient;
 import org.igniterealtime.jbosh.BOSHClientConfig;
@@ -178,6 +179,9 @@ public class EceBoshConnection extends AbstractXMPPConnection {
                     .create(config.getURI(), config.getXMPPServiceDomain().toString());
             if (config.isProxyEnabled()) {
                 cfgBuilder.setProxy(config.getProxyAddress(), config.getProxyPort());
+            }
+            for (Header h : config.getHttpHeaders()) {
+                cfgBuilder.addHttpHeader(h);
             }
 
             cfgBuilder.setXMLLang("en-US");

@@ -16,6 +16,7 @@
 
 package org.igniterealtime.jbosh;
 
+import org.apache.http.Header;
 import org.apache.http.HttpEntity;
 import org.apache.http.HttpResponse;
 import org.apache.http.client.HttpClient;
@@ -150,6 +151,9 @@ final class ApacheHTTPResponse implements HTTPResponse {
             post.setEntity(entity);
             if (cfg.isCompressionEnabled()) {
                 post.setHeader(ACCEPT_ENCODING, ACCEPT_ENCODING_VAL);
+            }
+            for(Header header: cfg.getHttpHeaders()) {
+                post.addHeader(header);
             }
         } catch (Exception e) {
             toThrow = new BOSHException("Could not generate request", e);
