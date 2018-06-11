@@ -1,0 +1,14 @@
+<param name='chat_queue_name'>
+    <mapping>
+        <attributeName>chat_queue</attributeName>
+        <objectName>casemgmt::activity_data</objectName>
+        <attributeValue>XYZ</attributeValue>
+        <validationString/>
+        <primaryKey>0</primaryKey>
+        <secureAttribute>0</secureAttribute>
+        <minLength>1</minLength>
+        <maxLength>120</maxLength>
+        <required>0</required>
+        <fieldType>1</fieldType>
+    </mapping>
+</param>

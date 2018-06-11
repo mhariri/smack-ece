@@ -12,8 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * Detects ECE specific events and dispatches them to
- * registered listeners.
+ * Detects ECE specific events and dispatches them to registered listeners.
  */
 public class EceEventDispatcher {
 
@@ -28,7 +27,7 @@ public class EceEventDispatcher {
     public EceEventDispatcher(AbstractXMPPConnection connection) {
         connection.addAsyncStanzaListener(packet -> {
                     Message msg = (Message) packet;
-                    EceStatusEvent status = EceStatusEvent.valueOf(msg.getBody());
+                    EceStatusEvent status = EceStatusEvent.extract(msg.getBody());
                     if (status != null) {
                         emitEvent(status);
                     }

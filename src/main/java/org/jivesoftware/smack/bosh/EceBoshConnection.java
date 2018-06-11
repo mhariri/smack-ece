@@ -2,7 +2,10 @@ package org.jivesoftware.smack.bosh;
 
 import com.google.common.io.CharStreams;
 
-import org.apache.commons.text.StringEscapeUtils;
+import com.egain.bindings.chat.EgainParams;
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.dataformat.xml.XmlMapper;
+
 import org.apache.http.Header;
 import org.igniterealtime.jbosh.AbstractBody;
 import org.igniterealtime.jbosh.BOSHClient;
@@ -41,6 +44,8 @@ import java.net.URISyntaxException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
+import static com.egain.bindings.chat.Constants.EGAIN_NS;
+
 public class EceBoshConnection extends AbstractXMPPConnection {
     /**
      * The XMPP Over Bosh namespace.
@@ -50,14 +55,12 @@ public class EceBoshConnection extends AbstractXMPPConnection {
      * The BOSH namespace from XEP-0124.
      */
     public static final String BOSH_URI = "http://jabber.org/protocol/httpbind";
-    public static final String EGAIN_NS = "http://bindings.egain.com/chat";
-    public static final String EGAIN_TO = "to";
     public static final String EGAIN_FROM = "from";
     public static final String EGAIN_AUTHID = "authid";
+    public static final String AGENT_JOIN_MSG = "agent_join_msg";
+    public static final String AGENT_LEFT_SESSION = "agent_left_session";
+    public static final String AGENT_CLOSE_SESSION = "agent_close_session";
     private static final Logger LOGGER = Logger.getLogger(EceBoshConnection.class.getName());
-    private static final String CUSTOMER_NAME_TOKEN = "$$CUSTOMER_NAME$$";
-    private static final String SUBJECT_TOKEN = "$$SUBJECT$$";
-
     /**
      * Holds the initial configuration used while creating the connection.
      */
@@ -66,6 +69,7 @@ public class EceBoshConnection extends AbstractXMPPConnection {
      * The session ID for the BOSH session with the connection manager.
      */
     protected String sessionID = null;
+    private EgainParams params;
     /**
      * The used BOSH client from the jbosh library.
      */
@@ -77,26 +81,43 @@ public class EceBoshConnection extends AbstractXMPPConnection {
     private PipedWriter readerPipe;
     private Thread readerConsumer;
     private boolean notified;
-    private String egainParams;
     private EceEventDispatcher eceEventDispatcher = new EceEventDispatcher(this);
+    private XmlMapper mapper = new XmlMapper();
 
     /**
      * Create a HTTP Binding connection to an XMPP server.
      *
-     * @param config       The configuration which is used for this connection.
-     * @param customerName that appears in agent's view
-     * @param subject      of the chat, appears as the first chat message for the agent
+     * @param config The configuration which is used for this connection.
+     * @param params eGain parameters to be passed in the beginning of the connection
      */
-    public EceBoshConnection(BOSHConfiguration config, String customerName, String subject) {
+    public EceBoshConnection(BOSHConfiguration config, EgainParams params) {
         super(config);
         this.config = config;
+        this.params = params;
 
+        if (null == params.getMessagingData()) {
+            params.setMessagingData(getDefaultMessages());
+        }
+        applyEventTokensToMessages(params);
+    }
+
+    private void applyEventTokensToMessages(EgainParams params) {
+        String msgs = params.getMessagingData();
+        msgs = msgs.replaceFirst(AGENT_JOIN_MSG + "\\s*=",
+                AGENT_JOIN_MSG + "=" + EceStatusEvent.CHAT_STARTED.getToken());
+        msgs = msgs.replaceFirst(AGENT_LEFT_SESSION + "\\s*=",
+                AGENT_LEFT_SESSION + "=" + EceStatusEvent.CHAT_CLOSED.getToken());
+        msgs = msgs.replaceFirst(AGENT_CLOSE_SESSION + "\\s*=",
+                AGENT_CLOSE_SESSION + "=" + EceStatusEvent.CHAT_CLOSED.getToken());
+        params.setMessagingData(msgs);
+    }
+
+    private String getDefaultMessages() {
         try {
-            egainParams = CharStreams.toString(
+            return CharStreams.toString(
                     new InputStreamReader(
-                            getClass().getResourceAsStream("/egain_params.xml")));
-            egainParams = egainParams.replace(CUSTOMER_NAME_TOKEN, StringEscapeUtils.escapeXml11(customerName));
-            egainParams = egainParams.replace(SUBJECT_TOKEN, StringEscapeUtils.escapeXml11(subject));
+                            getClass().getResourceAsStream("/default_messages.txt")));
+
         } catch (IOException e) {
             throw new RuntimeException(e);
         }
@@ -132,11 +153,13 @@ public class EceBoshConnection extends AbstractXMPPConnection {
                     .setAttribute(BodyQName.create(EGAIN_NS, EGAIN_FROM), "anonymous@egain.com")
                     .setAttribute(BodyQName.create(EGAIN_NS, EGAIN_AUTHID), "0")
                     .setAttribute(BodyQName.create(EGAIN_NS, "content"), "text/xml; charset=utf-8")
-                    .setPayloadXML(egainParams)
+                    .setPayloadXML(mapper.writeValueAsString(params))
                     .build());
             authenticated = true;
         } catch (BOSHException e) {
             throw new SmackException.ConnectionException(e);
+        } catch (JsonProcessingException e) {
+            throw new RuntimeException(e);
         }
 
 
@@ -249,10 +272,9 @@ public class EceBoshConnection extends AbstractXMPPConnection {
     }
 
     /**
-     * Closes the connection by setting presence to unavailable and closing the
-     * HTTP client. The shutdown logic will be used during a planned disconnection or when
-     * dealing with an unexpected disconnection. Unlike {@link #disconnect()} the connection's
-     * BOSH stanza(/packet) reader will not be removed; thus connection's state is kept.
+     * Closes the connection by setting presence to unavailable and closing the HTTP client. The shutdown logic will be used during
+     * a planned disconnection or when dealing with an unexpected disconnection. Unlike {@link #disconnect()} the connection's BOSH
+     * stanza(/packet) reader will not be removed; thus connection's state is kept.
      */
     @Override
     protected void shutdown() {
@@ -391,8 +413,7 @@ public class EceBoshConnection extends AbstractXMPPConnection {
     }
 
     /**
-     * Sends out a notification that there was an error with the connection
-     * and closes the connection.
+     * Sends out a notification that there was an error with the connection and closes the connection.
      *
      * @param e the exception that causes the connection close event.
      */
@@ -417,16 +438,15 @@ public class EceBoshConnection extends AbstractXMPPConnection {
     }
 
     /**
-     * A listener class which listen for a successfully established connection
-     * and connection errors and notifies the BOSHConnection.
+     * A listener class which listen for a successfully established connection and connection errors and notifies the
+     * BOSHConnection.
      *
      * @author Guenther Niess
      */
     public class BOSHConnectionListener implements BOSHClientConnListener {
 
         /**
-         * Notify the BOSHConnection about connection state changes.
-         * Process the connection listeners and try to login if the
+         * Notify the BOSHConnection about connection state changes. Process the connection listeners and try to login if the
          * connection was formerly authenticated and is now reconnected.
          */
         @Override
@@ -470,8 +490,7 @@ public class EceBoshConnection extends AbstractXMPPConnection {
     }
 
     /**
-     * Listens for XML traffic from the BOSH connection manager and parses it into
-     * stanza(/packet) objects.
+     * Listens for XML traffic from the BOSH connection manager and parses it into stanza(/packet) objects.
      *
      * @author Guenther Niess
      */

@@ -1,5 +1,7 @@
 package org.jivesoftware.smack.bosh;
 
+import com.egain.bindings.chat.EgainParams;
+
 import org.igniterealtime.jbosh.BOSHClient;
 import org.igniterealtime.jbosh.BOSHException;
 import org.igniterealtime.jbosh.ComposableBody;
@@ -42,7 +44,7 @@ public class EceBoshConnectionTest {
                 .setXmppDomain("xyz")
                 .setFile("/")
                 .build();
-        connection = new EceBoshConnection(config, "customer", "subject");
+        connection = new EceBoshConnection(config, new EgainParams());
         client = mock(BOSHClient.class);
     }
 

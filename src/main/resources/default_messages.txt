@@ -1,69 +1,15 @@
-<egainParams
-        xmlns='http://bindings.egain.com/chat'>
-    <param name='L10N_NAME_PROMPT'>
-        <mapping>
-            <attributeName>full_name</attributeName>
-            <objectName>casemgmt::individual_customer_data</objectName>
-            <attributeValue>$$CUSTOMER_NAME$$</attributeValue>
-            <validationString/>
-            <primaryKey>0</primaryKey>
-            <minLength>1</minLength>
-            <maxLength>120</maxLength>
-            <required>1</required>
-            <fieldType>1</fieldType>
-        </mapping>
-    </param>
-    <param name='L10N_EMAIL_PROMPT'>
-        <mapping>
-            <attributeName>email_address</attributeName>
-            <objectName>casemgmt::email_address_contact_point_data</objectName>
-            <attributeValue>asdf@sd.dd</attributeValue>
-            <validationString/>
-            <primaryKey>1</primaryKey>
-            <minLength>1</minLength>
-            <maxLength>250</maxLength>
-            <required>1</required>
-            <fieldType>1</fieldType>
-        </mapping>
-    </param>
-    <param name='L10N_PHONE_NUMBER_PROMPT'>
-        <mapping>
-            <attributeName>phone_number</attributeName>
-            <objectName>casemgmt::phone_number_data</objectName>
-            <attributeValue></attributeValue>
-            <validationString/>
-            <primaryKey>0</primaryKey>
-            <minLength>0</minLength>
-            <maxLength>18</maxLength>
-            <required>0</required>
-            <fieldType>1</fieldType>
-        </mapping>
-    </param>
-    <param name='L10N_YOUR_QUESTION_PROMPT'>
-        <mapping>
-            <attributeName>subject</attributeName>
-            <objectName>casemgmt::activity_data</objectName>
-            <attributeValue>$$SUBJECT$$</attributeValue>
-            <validationString/>
-            <primaryKey>0</primaryKey>
-            <minLength>1</minLength>
-            <maxLength>800</maxLength>
-            <required>1</required>
-            <fieldType>2</fieldType>
-        </mapping>
-    </param>
-    <messagingData>&lt;![CDATA[cust_welcome_msg =An agent will be with you shortly.
+<![CDATA[cust_welcome_msg =An agent will be with you shortly.
 #  0 - Agent Screen Name
-agent_join_msg = CHAT_STARTED
-system_close_session = CHAT_CLOSED
+agent_join_msg = You are now chatting with {0}
+system_close_session =System has closed the chat
 #  0 - Agent Screen Name
-agent_left_session = CHAT_CLOSED
+agent_left_session = {0} has left the chat
 #  0 - Agent Screen Name
-agent_close_session = CHAT_CLOSED
+agent_close_session = {0} has ended the chat
 #  0 - Agent Screen Name
-typing_message = typing
+typing_message ={0} is typing a message.
 #  0 - KBArticle attachment file name
-attachment_msg = attachment: {0}
+attachment_msg = You have received an Attachment: {0}
 #  0 - title or url of the page pushed by Agent
 item_sent =Has sent a page - {0}
 newest_message =*** Newest Message ***
@@ -78,15 +24,15 @@ deptt_transfer_msg =You have been transferred to department {0}
 ts_am_msg = AM
 ts_pm_msg = PM
 # 0 - Chat session creation time, here {0} is place holder for time and {1} is place holder for date
-chat_start_string = &lt;b&gt;CHAT STARTED AT&lt;/b&gt; {0}
+chat_start_string = <b>CHAT STARTED AT</b> {0}
 # 0 - Chat session end time, here {0} is place holder for time and {1} is place holder for date
-chat_end_string =  &lt;b&gt;CHAT ENDED AT&lt;/b&gt; {0}
+chat_end_string =  <b>CHAT ENDED AT</b> {0}
 agent_reconstruct_msg = The page has been reconstructed by the agent
 # properties for cobrowse session
 cps_start_session=Loading...
 cps_error_connection = Connection to Cobrowse server failed.
 cps_try_connection = Connecting to Cobrowse server...
-cps_down = Cobrowse service is disrupted.&lt;BR&gt;Cobrowse will not proceed. Please try again later.
+cps_down = Cobrowse service is disrupted.<BR>Cobrowse will not proceed. Please try again later.
 cps_nosession_agent = The Cobrowse server seems to be unavailable at this moment. You will not be able to browse or share pages. Please contact the administrator for more details.
 cps_nosession_cust = You will not be able to browse or share pages since the cobrowse service is unavailable at this moment. Please contact the agent for more details.
 cps_noconnection = Connection with the Cobrowse servers could not be established.
@@ -94,7 +40,7 @@ cps_incorrect_jvm = You will not be able to browse or share pages since the Java
 cps_go_back=Go Back
 cps_go_forward=Go Forward
 cps_go_reload=Refresh
-cps_failover_agent=&lt;b&gt;System has detected a failover. Please wait till session is redirected ...&lt;/b&gt;
+cps_failover_agent=<b>System has detected a failover. Please wait till session is redirected ...</b>
 cps_noappserver_cust=You will not be able to browse or share pages since the cobrowse service is unavailable at this moment. Please contact the agent for more details.
 cps_noappserver_agent=The cobrowse server seems to be unavailable at this moment. You will not be able to browse or share pages. Please contact the administrator for more details.
 cps_nosession_abandoned_agent = Web page could not be loaded since the customer is no longer in the cobrowse session. You will not be able to browse or share pages with this customer.
@@ -104,7 +50,7 @@ waiting_for_you = Waiting for you to reply.
 new_chat_msg = A new chat message has arrived.
 agent_msg_send_fail = The following message could not be delivered. Try to send it again.
 # - invalid chat message
-invalid_chat_message = Some messages were not delivered because they did not comply with the system security standards. Script tags such as '&amp;lt;script\\&amp;gt;', 'alert(', 'javascript:' are not allowed in the chat message.&lt;BR&gt;Please review the following messages and send them again:&lt;BR&gt;;
+invalid_chat_message = Some messages were not delivered because they did not comply with the system security standards. Script tags such as '&lt;script\\&gt;', 'alert(', 'javascript:' are not allowed in the chat message.<BR>Please review the following messages and send them again:<BR>;
 # - Annonymous Customer message
 chat_has_been_initiated = Chat has been initiated by anonymous customer.
 L10_AGENT_UNAVAILABILITY=There seems to be a problem with the agent's network connection. Please wait for it to be restored. If you do not see a message from the agent in a few minutes, close this window and start a new chat.
@@ -112,10 +58,10 @@ L10_AGENT_UNAVAILABILITY=There seems to be a problem with the agent's network co
 # - Agent offered video chat
 convert_text_chat_to_video_chat = Waiting for {0} to accept video chat invitation.
 convert_text_chat_to_audio_chat = Waiting for {0} to accept voice chat invitation.
-convert_text_chat_to_video_audio_chat_customer = {0} would like to video chat with you &lt;A class=convertvideo  HREF='#' onclick='parent.onClickOfferVideoChat({1},2)'&gt;Accept Video Chat&lt;/A&gt;&amp;nbsp;&amp;nbsp;&lt;A class=convertvideo  HREF='#' onclick='parent.onClickOfferVideoChat({1},5)'&gt;Accept Voice Chat&lt;/A&gt;&amp;nbsp;&amp;nbsp;&lt;A class=rejectvchatinvite HREF='#' onclick='parent.onClickRejectVideoChat({1},2)'&gt;Decline&lt;/A&gt;
-convert_text_chat_to_video_chat_customer = {0} would like to video chat with you &lt;A class=convertvideo  HREF='#' onclick='parent.onClickOfferVideoChat({1},2)'&gt;Accept Video Chat&lt;/A&gt;&amp;nbsp;&amp;nbsp;&lt;A class=rejectvchatinvite HREF='#' onclick='parent.onClickRejectVideoChat({1},2)'&gt;Decline&lt;/A&gt;
-convert_text_chat_to_agent_video_audio_chat_customer = {0} would like to video chat with you &lt;A class=convertvideo  HREF='#' onclick='parent.onClickOfferVideoChat({1},5)'&gt;Accept Voice Chat&lt;/A&gt;&amp;nbsp;&amp;nbsp;&lt;A class=rejectvchatinvite HREF='#' onclick='parent.onClickRejectVideoChat({1},2)'&gt;Decline&lt;/A&gt;
-convert_text_chat_to_audio_chat_customer = {0} would like to voice chat with you &lt;A class=convertvideo  HREF='#' onclick='parent.onClickOfferVideoChat({1},4)'&gt;Accept Voice Chat&lt;/A&gt;&amp;nbsp;&amp;nbsp;&lt;A class=rejectvchatinvite HREF='#' onclick='parent.onClickRejectVideoChat({1},4)'&gt;Decline&lt;/A&gt;
+convert_text_chat_to_video_audio_chat_customer = {0} would like to video chat with you <A id=convertvideo  HREF='#' egainElement='video' egainUserId='{1}' egainAction='accept' egainAVMode='2'>Accept Video Chat</A>&nbsp;&nbsp;<A id=convertvideo  HREF='#' egainElement='video' egainUserId='{1}' egainAction='accept' egainAVMode='5'>Accept Voice Chat</A>&nbsp;&nbsp;<A id=rejectvchatinvite HREF='#' egainElement='video' egainUserId='{1}' egainAction='reject' egainAVMode='2'>Decline</A>
+convert_text_chat_to_video_chat_customer = {0} would like to video chat with you <A id=convertvideo  HREF='#' egainElement='video' egainUserId='{1}' egainAction='accept' egainAVMode='2'>Accept Video Chat</A>&nbsp;&nbsp;<A id=rejectvchatinvite HREF='#' egainElement='video' egainUserId='{1}' egainAction='reject' egainAVMode='2'>Decline</A>
+convert_text_chat_to_audio_chat_customer = {0} would like to voice chat with you <A id=convertvideo  HREF='#' egainElement='video' egainUserId='{1}' egainAction='accept' egainAVMode='4'>Accept Voice Chat</A>&nbsp;&nbsp;<A id=rejectvchatinvite HREF='#' egainElement='video' egainUserId='{1}' egainAction='reject' egainAVMode='4'>Decline</A>
+convert_text_chat_to_agent_video_audio_chat_customer = {0} would like to video chat with you <A class=convertvideo  HREF='#' egainElement='video' egainUserId='{1}' egainAction='accept' egainAVMode='5'>Accept Voice Chat</A>&nbsp;&nbsp;<A class=rejectvchatinvite HREF='#' egainElement='video' egainUserId='{1}' egainAction='reject' egainAVMode='2'>Decline</A>
 video_chat_ended_agent = {0} has closed the video chat.
 audio_chat_ended_agent = {0} has closed the voice chat.
 agent_accepted_video_chat_offer = Agent accepted your invitation of video chat
@@ -136,10 +82,12 @@ customer_offer_text_to_audio_cust = Waiting for agent to accept the voice chat i
 video_chat_started = You are now connected with agent.
 
 default_customer_name = Customer
-started_cobrowse_session = {0} has started a cobrowse session &lt;i&gt;{1}&lt;/i&gt;
-agent_join_cobrowse_session = {0} has joined the cobrowse session &lt;i&gt;{1}&lt;/i&gt;
-agent_left_cobrowse_session = {0} has left the cobrowse session &lt;i&gt;{1}&lt;/i&gt;
+started_cobrowse_session = {0} has started a cobrowse session <i>{1}</i>
+agent_join_cobrowse_session = {0} has joined the cobrowse session <i>{1}</i>
+agent_left_cobrowse_session = {0} has left the cobrowse session <i>{1}</i>
 join_cobrowse_session_link_name = Join Cobrowse Session
+start_cobrowse_session_link_name = Start Cobrowse Session
+start_cobrowse_session_with_url_link_name = Join Cobrowse Session
 mail_footer_message_live_chat = Live Chat
 mail_footer_message_by_egain = by Cisco
 
@@ -161,12 +109,25 @@ transcript_date_format = h:mm a (d MMM yyyy)
 transcript_time_format = h:mm a
 customer_chat_inititated = Chat has been initiated by customer.
 L10N_SENSITIVE_DATA_MASKED = Don't worry. Your sensitive data has been masked.
-L10N_OFF_RECORD_MESSAGE_REMOVED = &lt;i&gt;Message has been removed.&lt;/i&gt;
+L10N_OFF_RECORD_MESSAGE_REMOVED = <i>Message has been removed.</i>
 L10N_TRANSCRIPT_ESCALATION_HEADER = This chat has been escalated. Expand to view the history.
+L10N_TRANSCRIPT_VA_ESCALATION_HEADER = This chat has been escalated from virtual assistant. Expand to view the history.
 attachment_to_chat_customer = {0} sent an attachment {1}
 attachment_to_chat_agent = {0} sent an attachment {1}
 accepted_chat_attachment = {0} accepted attachment {1}
 rejected_chat_attachment = {0} rejected attachment {1}
 attachment_action_taken = You have already taken action on this attachment
-]]&gt;</messagingData>
-</egainParams>
+attachment_sending_cancelled = There is some error.Please request customer to send the file again.
+L10N_UNABLE_TO_FETCH_TRANSCRIPT = System is unable to display the transcript.
+L10N_EXTENDED_TIMEOUT_AGENT_NOTIFICATION = Customer is no longer connected to the chat, potentially due to network issues. You can wait for the customer to reconnect to this chat or go ahead and complete this chat to receive new chats.
+CUST_RECONNECTED_AGENT_MESSAGE = You are now reconnected with {0}
+
+
+L10N_DELAY_TIME_PROMPT = "Delay Time (in minutes)"
+L10N_EXIT_TXT="<STRONG>Thank you for visiting.</STRONG><BR><BR>If you have any further enquiries, please contact us via email or phone."
+L10N_LINES_ARE_BUSY = "<b>Lines are busy please try later.</b>"
+L10N_NO_AGENTS_AVAILABLE = "<b>No agents are available at the moment.</b>"
+L10N_SYSTEM_CANNOT_ASSIGN_AGENT = "<b>System cannot assign an agent to the request.</b>"
+L10N_MSG_CMB_FAILURE = "<b>CMB FAILED CAN NOT CONTINUE THE CHAT</b>"
+error_delay_time = "Enter a valid delay time"
+]]>
