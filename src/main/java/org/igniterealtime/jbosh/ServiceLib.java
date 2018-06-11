@@ -28,9 +28,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * Utility library for use in loading services using the Jar Service
- * Provider Interface (Jar SPI).  This can be replaced once the minimum
- * java rev moves beyond Java 5.
+ * Utility library for use in loading services using the Jar Service Provider Interface (Jar SPI).  This can be replaced once the
+ * minimum java rev moves beyond Java 5.
  */
 final class ServiceLib {
 
@@ -54,18 +53,14 @@ final class ServiceLib {
     // Package-private methods:
 
     /**
-     * Probe for and select an implementation of the specified service
-     * type by using the a modified Jar SPI mechanism.  Modified in that
-     * the system properties will be checked to see if there is a value
-     * set for the naem of the class to be loaded.  If so, that value is
-     * treated as the class name of the first implementation class to be
-     * attempted to be loaded.  This provides a (unsupported) mechanism
-     * to insert other implementations.  Note that the supported mechanism
-     * is by properly ordering the classpath.
+     * Probe for and select an implementation of the specified service type by using the a modified Jar SPI mechanism.  Modified in
+     * that the system properties will be checked to see if there is a value set for the naem of the class to be loaded.  If so,
+     * that value is treated as the class name of the first implementation class to be attempted to be loaded.  This provides a
+     * (unsupported) mechanism to insert other implementations.  Note that the supported mechanism is by properly ordering the
+     * classpath.
      *
      * @return service instance
-     * @throws IllegalStateException is no service implementations could be
-     *                               instantiated
+     * @throws IllegalStateException is no service implementations could be instantiated
      */
     static <T> T loadService(Class<T> ofType) {
         List<String> implClasses = loadServicesImplementations(ofType);
@@ -88,9 +83,8 @@ final class ServiceLib {
     // Private methods:
 
     /**
-     * Generates a list of implementation class names by using
-     * the Jar SPI technique.  The order in which the class names occur
-     * in the service manifest is significant.
+     * Generates a list of implementation class names by using the Jar SPI technique.  The order in which the class names occur in
+     * the service manifest is significant.
      *
      * @return list of all declared implementation class names
      */
@@ -138,13 +132,11 @@ final class ServiceLib {
     }
 
     /**
-     * Attempts to load the specified implementation class.
-     * Attempts will fail if - for example - the implementation depends
-     * on a class not found on the classpath.
+     * Attempts to load the specified implementation class. Attempts will fail if - for example - the implementation depends on a
+     * class not found on the classpath.
      *
      * @param className implementation class to attempt to load
-     * @return service instance, or {@code null} if the instance could not be
-     * loaded
+     * @return service instance, or {@code null} if the instance could not be loaded
      */
     private static <T> T attemptLoad(
             final Class<T> ofClass,
@@ -185,8 +177,7 @@ final class ServiceLib {
     }
 
     /**
-     * Check and close a closeable object, trapping and ignoring any
-     * exception that might result.
+     * Check and close a closeable object, trapping and ignoring any exception that might result.
      *
      * @param closeMe the thing to close
      */

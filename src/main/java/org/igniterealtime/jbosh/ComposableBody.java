@@ -26,12 +26,11 @@ import java.util.regex.Pattern;
 import javax.xml.XMLConstants;
 
 /**
- * Implementation of the {@code AbstractBody} class which allows for the
- * definition of  messages from individual elements of a body.
+ * Implementation of the {@code AbstractBody} class which allows for the definition of  messages from individual elements of a
+ * body.
  * <p>
- * A message is constructed by creating a builder, manipulating the
- * configuration of the builder, and then building it into a class instance,
- * as in the following example:
+ * A message is constructed by creating a builder, manipulating the configuration of the builder, and then building it into a class
+ * instance, as in the following example:
  * <pre>
  * {@code
  * ComposableBody body = ComposableBody.builder()
@@ -40,8 +39,7 @@ import javax.xml.XMLConstants;
  *     .build();
  * }
  * </pre>
- * Class instances can also be "rebuilt", allowing them to be used as templates
- * when building many similar messages:
+ * Class instances can also be "rebuilt", allowing them to be used as templates when building many similar messages:
  * <pre>
  * {@code
  * ComposableBody body2 = body.rebuild()
@@ -49,10 +47,8 @@ import javax.xml.XMLConstants;
  *     .build();
  * }
  * </pre>
- * This class does only minimal syntactic and semantic checking with respect
- * to what the generated XML will look like.  It is up to the developer to
- * protect against the definition of malformed XML messages when building
- * instances of this class.
+ * This class does only minimal syntactic and semantic checking with respect to what the generated XML will look like.  It is up to
+ * the developer to protect against the definition of malformed XML messages when building instances of this class.
  * <p>
  * Instances of this class are immutable and thread-safe.
  * </p>
@@ -60,8 +56,7 @@ import javax.xml.XMLConstants;
 public final class ComposableBody extends AbstractBody {
 
     /**
-     * Pattern used to identify the beginning {@code body} element of a
-     * BOSH message.
+     * Pattern used to identify the beginning {@code body} element of a BOSH message.
      */
     private static final Pattern BOSH_START =
             Pattern.compile("<(?:[^:\t\n\r >]+:)?body(?:[\t\n\r ][^>]*?)?(/>|>)");
@@ -84,8 +79,7 @@ public final class ComposableBody extends AbstractBody {
             new AtomicReference<String>();
 
     /**
-     * Prevent direct construction.  This constructor is for body messages
-     * which are dynamically assembled.
+     * Prevent direct construction.  This constructor is for body messages which are dynamically assembled.
      */
     private ComposableBody(
             final Map<BodyQName, String> attrMap,
@@ -99,14 +93,11 @@ public final class ComposableBody extends AbstractBody {
     // Constructors:
 
     /**
-     * Parse a static body instance into a composable instance.  This is an
-     * expensive operation and should not be used lightly.
+     * Parse a static body instance into a composable instance.  This is an expensive operation and should not be used lightly.
      * <p/>
-     * The current implementation does not obtain the payload XML by means of
-     * a proper XML parser.  It uses some string pattern searching to find the
-     * first @{code body} element and the last element's closing tag.  It is
-     * assumed that the static body's XML is well formed, etc..  This
-     * implementation may change in the future.
+     * The current implementation does not obtain the payload XML by means of a proper XML parser.  It uses some string pattern
+     * searching to find the first @{code body} element and the last element's closing tag.  It is assumed that the static body's
+     * XML is well formed, etc..  This implementation may change in the future.
      *
      * @param body static body instance to convert
      * @return composable body instance
@@ -145,15 +136,12 @@ public final class ComposableBody extends AbstractBody {
     }
 
     /**
-     * If this {@code ComposableBody} instance is a dynamic instance, uses this
-     * {@code ComposableBody} instance as a starting point, create a builder
-     * which can be used to create another {@code ComposableBody} instance
-     * based on this one. This allows a {@code ComposableBody} instance to be
-     * used as a template.  Note that the use of the returned builder in no
-     * way modifies or manipulates the current {@code ComposableBody} instance.
+     * If this {@code ComposableBody} instance is a dynamic instance, uses this {@code ComposableBody} instance as a starting point,
+     * create a builder which can be used to create another {@code ComposableBody} instance based on this one. This allows a {@code
+     * ComposableBody} instance to be used as a template.  Note that the use of the returned builder in no way modifies or
+     * manipulates the current {@code ComposableBody} instance.
      *
-     * @return builder instance which can be used to build similar
-     * {@code ComposableBody} instances
+     * @return builder instance which can be used to build similar {@code ComposableBody} instances
      */
     public Builder rebuild() {
         return Builder.fromBody(this);
@@ -191,8 +179,7 @@ public final class ComposableBody extends AbstractBody {
     }
 
     /**
-     * Escape the value of an attribute to ensure we maintain valid
-     * XML syntax.
+     * Escape the value of an attribute to ensure we maintain valid XML syntax.
      *
      * @param value value to escape
      * @return escaped value
@@ -240,9 +227,8 @@ public final class ComposableBody extends AbstractBody {
     }
 
     /**
-     * Class instance builder, after the builder pattern.  This allows each
-     * message instance to be immutable while providing flexibility when
-     * building new messages.
+     * Class instance builder, after the builder pattern.  This allows each message instance to be immutable while providing
+     * flexibility when building new messages.
      * <p>
      * Instances of this class are <b>not</b> thread-safe.
      * </p>
@@ -260,10 +246,8 @@ public final class ComposableBody extends AbstractBody {
         }
 
         /**
-         * Creates a builder which is initialized to the values of the
-         * provided {@code ComposableBody} instance.  This allows an
-         * existing {@code ComposableBody} to be used as a
-         * template/starting point.
+         * Creates a builder which is initialized to the values of the provided {@code ComposableBody} instance.  This allows an
+         * existing {@code ComposableBody} to be used as a template/starting point.
          *
          * @param source body template
          * @return builder instance
@@ -277,8 +261,7 @@ public final class ComposableBody extends AbstractBody {
         }
 
         /**
-         * Set the body message's wrapped payload content.  Any previous
-         * content will be replaced.
+         * Set the body message's wrapped payload content.  Any previous content will be replaced.
          *
          * @param xml payload XML content
          * @return builder instance
@@ -316,9 +299,8 @@ public final class ComposableBody extends AbstractBody {
         }
 
         /**
-         * Convenience method to set a namespace definition. This would result
-         * in a namespace prefix definition similar to:
-         * {@code <body xmlns:prefix="uri"/>}
+         * Convenience method to set a namespace definition. This would result in a namespace prefix definition similar to: {@code
+         * <body xmlns:prefix="uri"/>}
          *
          * @param prefix prefix to define
          * @param uri    namespace URI to associate with the prefix

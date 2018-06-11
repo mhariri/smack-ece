@@ -20,14 +20,12 @@ import java.security.SecureRandom;
 import java.util.concurrent.atomic.AtomicLong;
 
 /**
- * Request ID sequence generator.  This generator generates a random first
- * RID and then manages the sequence from there on out.
+ * Request ID sequence generator.  This generator generates a random first RID and then manages the sequence from there on out.
  */
 final class RequestIDSequence {
 
     /**
-     * Maximum number of bits available for representing request IDs, according
-     * to the XEP-0124 spec.s
+     * Maximum number of bits available for representing request IDs, according to the XEP-0124 spec.s
      */
     private static final int MAX_BITS = 53;
 
@@ -37,8 +35,7 @@ final class RequestIDSequence {
     private static final int INCREMENT_BITS = 32;
 
     /**
-     * Minimum number of times the initial RID can be incremented before
-     * exceeding the maximum.
+     * Minimum number of times the initial RID can be incremented before exceeding the maximum.
      */
     private static final long MIN_INCREMENTS = 1L << INCREMENT_BITS;
 
@@ -58,8 +55,7 @@ final class RequestIDSequence {
     private static final SecureRandom RAND = new SecureRandom();
 
     /**
-     * The last reqest ID used, or &lt;= 0 if a new request ID needs to be
-     * generated.
+     * The last reqest ID used, or &lt;= 0 if a new request ID needs to be generated.
      */
     private final AtomicLong nextRequestID;
 
@@ -77,9 +73,8 @@ final class RequestIDSequence {
     // Public methods:
 
     /**
-     * Calculates the next request ID value to use.  This number must be
-     * initialized such that it is unlikely to ever exceed 2 ^ 53, according
-     * to XEP-0124.
+     * Calculates the next request ID value to use.  This number must be initialized such that it is unlikely to ever exceed 2 ^ 53,
+     * according to XEP-0124.
      *
      * @return next request ID value
      */
@@ -91,9 +86,8 @@ final class RequestIDSequence {
     // Private methods:
 
     /**
-     * Generates an initial RID value by generating numbers until a number is
-     * found which is smaller than the maximum allowed value and greater
-     * than zero.
+     * Generates an initial RID value by generating numbers until a number is found which is smaller than the maximum allowed value
+     * and greater than zero.
      *
      * @return random initial value
      */

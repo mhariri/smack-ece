@@ -25,12 +25,10 @@ import java.util.List;
 import javax.net.ssl.SSLContext;
 
 /**
- * BOSH client configuration information.  Instances of this class contain
- * all information necessary to establish connectivity with a remote
- * connection manager.
+ * BOSH client configuration information.  Instances of this class contain all information necessary to establish connectivity with
+ * a remote connection manager.
  * <p>
- * Instances of this class are immutable, thread-safe,
- * and can be re-used to configure multiple client session instances.
+ * Instances of this class are immutable, thread-safe, and can be re-used to configure multiple client session instances.
  * </p>
  */
 public final class BOSHClientConfig {
@@ -155,8 +153,7 @@ public final class BOSHClientConfig {
     }
 
     /**
-     * Get the default language of any human-readable content within the
-     * XML.  Defaults to "en".
+     * Get the default language of any human-readable content within the XML.  Defaults to "en".
      *
      * @return XML language ID
      */
@@ -167,8 +164,7 @@ public final class BOSHClientConfig {
     /**
      * Get the routing information for messages sent to the CM.
      *
-     * @return route attribute string, or {@code null} if no routing
-     * info was provided.
+     * @return route attribute string, or {@code null} if no routing info was provided.
      */
     public String getRoute() {
         return route;
@@ -195,19 +191,16 @@ public final class BOSHClientConfig {
     /**
      * Get the SSL context to use for this session.
      *
-     * @return SSL context instance to use, or {@code null} if no
-     * context instance was provided.
+     * @return SSL context instance to use, or {@code null} if no context instance was provided.
      */
     public SSLContext getSSLContext() {
         return sslContext;
     }
 
     /**
-     * Determines whether or not compression of the underlying data stream
-     * should be attempted/allowed.  Defaults to {@code false}.
+     * Determines whether or not compression of the underlying data stream should be attempted/allowed.  Defaults to {@code false}.
      *
-     * @return {@code true} if compression should be attempted, {@code false}
-     * if compression is disabled or was not specified
+     * @return {@code true} if compression should be attempted, {@code false} if compression is disabled or was not specified
      */
     boolean isCompressionEnabled() {
         return compressionEnabled;
@@ -219,12 +212,11 @@ public final class BOSHClientConfig {
 
 
     /**
-     * Class instance builder, after the builder pattern.  This allows each
-     * {@code BOSHClientConfig} instance to be immutable while providing
-     * flexibility when building new {@code BOSHClientConfig} instances.
+     * Class instance builder, after the builder pattern.  This allows each {@code BOSHClientConfig} instance to be immutable while
+     * providing flexibility when building new {@code BOSHClientConfig} instances.
      * <p>
-     * Instances of this class are <b>not</b> thread-safe.  If template-style
-     * use is desired, see the {@code create(BOSHClientConfig)} method.
+     * Instances of this class are <b>not</b> thread-safe.  If template-style use is desired, see the {@code
+     * create(BOSHClientConfig)} method.
      * </p>
      */
     public static final class Builder {
@@ -243,8 +235,7 @@ public final class BOSHClientConfig {
         private List<Header> httpHeaders = new ArrayList<>();
 
         /**
-         * Creates a new builder instance, used to create instances of the
-         * {@code BOSHClientConfig} class.
+         * Creates a new builder instance, used to create instances of the {@code BOSHClientConfig} class.
          *
          * @param cmURI  URI to use to contact the connection manager
          * @param domain target domain to communicate with
@@ -255,8 +246,7 @@ public final class BOSHClientConfig {
         }
 
         /**
-         * Creates a new builder instance, used to create instances of the
-         * {@code BOSHClientConfig} class.
+         * Creates a new builder instance, used to create instances of the {@code BOSHClientConfig} class.
          *
          * @param cmURI  URI to use to contact the connection manager
          * @param domain target domain to communicate with
@@ -280,8 +270,7 @@ public final class BOSHClientConfig {
         }
 
         /**
-         * Creates a new builder instance using the existing configuration
-         * provided as a starting point.
+         * Creates a new builder instance using the existing configuration provided as a starting point.
          *
          * @param cfg configuration to copy
          * @return builder instance
@@ -299,8 +288,7 @@ public final class BOSHClientConfig {
         }
 
         /**
-         * Set the ID of the client station, to be forwarded to the connection
-         * manager when new sessions are created.
+         * Set the ID of the client station, to be forwarded to the connection manager when new sessions are created.
          *
          * @param id client ID
          * @return builder instance
@@ -315,8 +303,7 @@ public final class BOSHClientConfig {
         }
 
         /**
-         * Set the default language of any human-readable content within the
-         * XML.
+         * Set the default language of any human-readable content within the XML.
          *
          * @param lang XML language ID
          * @return builder instance
@@ -331,16 +318,13 @@ public final class BOSHClientConfig {
         }
 
         /**
-         * Sets the destination server/domain that the client should connect to.
-         * Connection managers may be configured to enable sessions with more
-         * that one server in different domains.  When requesting a session with
-         * such a "proxy" connection manager, a client should use this method to
-         * specify the server with which it wants to communicate.
+         * Sets the destination server/domain that the client should connect to. Connection managers may be configured to enable
+         * sessions with more that one server in different domains.  When requesting a session with such a "proxy" connection
+         * manager, a client should use this method to specify the server with which it wants to communicate.
          *
          * @param protocol connection protocol (e.g, "xmpp")
-         * @param host     host or domain to be served by the remote server.  Note
-         *                 that this is not necessarily the host name or domain name of the
-         *                 remote server.
+         * @param host     host or domain to be served by the remote server.  Note that this is not necessarily the host name or
+         *                 domain name of the remote server.
          * @param port     port number of the remote server
          * @return builder instance
          */
@@ -391,8 +375,7 @@ public final class BOSHClientConfig {
         }
 
         /**
-         * Set the SSL context to use for this session.  This can be used
-         * to configure certificate-based authentication, etc..
+         * Set the SSL context to use for this session.  This can be used to configure certificate-based authentication, etc..
          *
          * @param ctx SSL context
          * @return builder instance
@@ -407,11 +390,10 @@ public final class BOSHClientConfig {
         }
 
         /**
-         * Set whether or not compression of the underlying data stream
-         * should be attempted.  By default, compression is disabled.
+         * Set whether or not compression of the underlying data stream should be attempted.  By default, compression is disabled.
          *
-         * @param enabled set to {@code true} if compression should be
-         *                attempted when possible, {@code false} to disable compression
+         * @param enabled set to {@code true} if compression should be attempted when possible, {@code false} to disable
+         *                compression
          * @return builder instance
          */
         public Builder setCompressionEnabled(final boolean enabled) {
@@ -423,7 +405,6 @@ public final class BOSHClientConfig {
          * Any additional headers to be sent in the HTTP requests
          *
          * @param additionalHeader to be sent with every request
-         *
          * @return builder instance
          */
         public Builder addHttpHeader(Header additionalHeader) {

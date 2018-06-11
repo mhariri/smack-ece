@@ -17,8 +17,7 @@
 package org.igniterealtime.jbosh;
 
 /**
- * Data type representing the value of the {@code requests} attribute of the
- * {@code bosh} element.
+ * Data type representing the value of the {@code requests} attribute of the {@code bosh} element.
  */
 final class AttrRequests extends AbstractIntegerAttr {
 
@@ -37,8 +36,7 @@ final class AttrRequests extends AbstractIntegerAttr {
      * Creates a new attribute instance from the provided String.
      *
      * @param str string representation of the attribute
-     * @return instance of the attribute for the specified string, or
-     * {@code null} if input string is {@code null}
+     * @return instance of the attribute for the specified string, or {@code null} if input string is {@code null}
      * @throws BOSHException on parse or validation failure
      */
     static AttrRequests createFromString(final String str)

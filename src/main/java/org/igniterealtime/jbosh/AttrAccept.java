@@ -17,8 +17,7 @@
 package org.igniterealtime.jbosh;
 
 /**
- * Data type representing the getValue of the {@code accept} attribute of the
- * {@code bosh} element.
+ * Data type representing the getValue of the {@code accept} attribute of the {@code bosh} element.
  */
 final class AttrAccept extends AbstractAttr<String> {
 
@@ -42,8 +41,7 @@ final class AttrAccept extends AbstractAttr<String> {
      * Creates a new attribute instance from the provided String.
      *
      * @param str string representation of the attribute
-     * @return attribute instance or {@code null} if provided string is
-     * {@code null}
+     * @return attribute instance or {@code null} if provided string is {@code null}
      * @throws BOSHException on parse or validation failure
      */
     static AttrAccept createFromString(final String str)
@@ -59,8 +57,7 @@ final class AttrAccept extends AbstractAttr<String> {
      * Determines whether or not the specified encoding is supported.
      *
      * @param name encoding name
-     * @result {@code true} if the encoding is accepted, {@code false}
-     * otherwise
+     * @result {@code true} if the encoding is accepted, {@code false} otherwise
      */
     boolean isAccepted(final String name) {
         for (String str : encodings) {

@@ -23,10 +23,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * A request and response pair representing a single exchange with a remote
- * content manager.  This is primarily a container class intended to maintain
- * the relationship between the request and response but allows the response
- * to be added after the fact.
+ * A request and response pair representing a single exchange with a remote content manager.  This is primarily a container class
+ * intended to maintain the relationship between the request and response but allows the response to be added after the fact.
  */
 final class HTTPExchange {
 

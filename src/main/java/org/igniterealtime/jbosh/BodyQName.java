@@ -19,8 +19,7 @@ package org.igniterealtime.jbosh;
 import javax.xml.namespace.QName;
 
 /**
- * Qualified name of an attribute of the wrapper element.  This class is
- * analagous to the {@code javax.xml.namespace.QName} class.
+ * Qualified name of an attribute of the wrapper element.  This class is analagous to the {@code javax.xml.namespace.QName} class.
  * Each qualified name consists of a namespace URI and a local name.
  * <p>
  * Instances of this class are immutable and thread-safe.
@@ -63,8 +62,7 @@ public final class BodyQName {
     }
 
     /**
-     * Creates a new qualified name using a namespace URI and local name
-     * along with an optional prefix.
+     * Creates a new qualified name using a namespace URI and local name along with an optional prefix.
      *
      * @param uri    namespace URI
      * @param local  local name
@@ -120,8 +118,7 @@ public final class BodyQName {
     }
 
     /**
-     * Get the optional prefix used with this qualified name, or {@code null}
-     * if no prefix has been assiciated.
+     * Get the optional prefix used with this qualified name, or {@code null} if no prefix has been assiciated.
      *
      * @return prefix, or {@code null} if no prefix was supplied
      */
@@ -154,12 +151,10 @@ public final class BodyQName {
     }
 
     /**
-     * Convenience method to compare this qualified name with a
-     * {@code javax.xml.namespace.QName}.
+     * Convenience method to compare this qualified name with a {@code javax.xml.namespace.QName}.
      *
      * @param otherName QName to compare to
-     * @return @{code true} if the qualified name is the same, {@code false}
-     * otherwise
+     * @return @{code true} if the qualified name is the same, {@code false} otherwise
      */
     boolean equalsQName(final QName otherName) {
         return qname.equals(otherName);

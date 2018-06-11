@@ -17,33 +17,29 @@
 package org.igniterealtime.jbosh;
 
 /**
- * Interface used to represent code which can send a BOSH XML body over
- * HTTP to a connection manager.
+ * Interface used to represent code which can send a BOSH XML body over HTTP to a connection manager.
  */
 public interface HTTPSender {
 
     /**
-     * Initialize the HTTP sender instance for use with the session provided.
-     * This method will be called once before use of the service instance.
+     * Initialize the HTTP sender instance for use with the session provided. This method will be called once before use of the
+     * service instance.
      *
      * @param sessionCfg session configuration
      */
     void init(BOSHClientConfig sessionCfg);
 
     /**
-     * Dispose of all resources used to provide the required services.  This
-     * method will be called once when the service instance is no longer
-     * required.
+     * Dispose of all resources used to provide the required services.  This method will be called once when the service instance is
+     * no longer required.
      */
     void destroy();
 
     /**
-     * Create a {@code Callable} instance which can be used to send the
-     * request specified to the connection manager.  This method should
-     * return immediately, prior to doing any real work.  The invocation
-     * of the returned {@code Callable} should send the request (if it has
-     * not already been sent by the time of the call), block while waiting
-     * for the response, and then return the response body.
+     * Create a {@code Callable} instance which can be used to send the request specified to the connection manager.  This method
+     * should return immediately, prior to doing any real work.  The invocation of the returned {@code Callable} should send the
+     * request (if it has not already been sent by the time of the call), block while waiting for the response, and then return the
+     * response body.
      *
      * @param params CM session creation resopnse params
      * @param body   request body to send

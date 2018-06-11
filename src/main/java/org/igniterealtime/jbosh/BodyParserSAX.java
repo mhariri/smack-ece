@@ -32,11 +32,9 @@ import javax.xml.parsers.SAXParser;
 import javax.xml.parsers.SAXParserFactory;
 
 /**
- * Implementation of the BodyParser interface which uses the SAX API
- * that is part of the JDK.  Due to the fact that we can cache and reuse
- * SAXPArser instances, this has proven to be significantly faster than the
- * use of the javax.xml.stream API introduced in Java 6 while simultaneously
- * providing an implementation accessible to Java 5 users.
+ * Implementation of the BodyParser interface which uses the SAX API that is part of the JDK.  Due to the fact that we can cache and
+ * reuse SAXPArser instances, this has proven to be significantly faster than the use of the javax.xml.stream API introduced in Java
+ * 6 while simultaneously providing an implementation accessible to Java 5 users.
  */
 final class BodyParserSAX implements BodyParser {
 
@@ -51,10 +49,8 @@ final class BodyParserSAX implements BodyParser {
      */
     private static final SAXParserFactory SAX_FACTORY;
     /**
-     * Thread local to contain a SAX parser instance for each thread that
-     * attempts to use one.  This allows us to gain an order of magnitude of
-     * performance as a result of not constructing parsers for each
-     * invocation while retaining thread safety.
+     * Thread local to contain a SAX parser instance for each thread that attempts to use one.  This allows us to gain an order of
+     * magnitude of performance as a result of not constructing parsers for each invocation while retaining thread safety.
      */
     private static final ThreadLocal<SoftReference<SAXParser>> PARSER =
             new ThreadLocal<SoftReference<SAXParser>>() {
@@ -186,8 +182,7 @@ final class BodyParserSAX implements BodyParser {
         /**
          * {@inheritDoc}
          * <p>
-         * This implementation uses this event hook to keep track of the
-         * default namespace on the body element.
+         * This implementation uses this event hook to keep track of the default namespace on the body element.
          */
         @Override
         public void startPrefixMapping(

@@ -23,16 +23,12 @@ import java.util.Collections;
 import java.util.Map;
 
 /**
- * Implementation of the {@code AbstractBody} class which allows for the
- * definition of messages from pre-existing message content.  Instances of
- * this class are based on the underlying data and therefore cannot be
- * modified.  In order to obtain the wrapper element namespace and
- * attribute information, the body content is partially parsed.
+ * Implementation of the {@code AbstractBody} class which allows for the definition of messages from pre-existing message content.
+ * Instances of this class are based on the underlying data and therefore cannot be modified.  In order to obtain the wrapper
+ * element namespace and attribute information, the body content is partially parsed.
  * <p>
- * This class does only minimal syntactic and semantic checking with respect
- * to what the generated XML will look like.  It is up to the developer to
- * protect against the definition of malformed XML messages when building
- * instances of this class.
+ * This class does only minimal syntactic and semantic checking with respect to what the generated XML will look like.  It is up to
+ * the developer to protect against the definition of malformed XML messages when building instances of this class.
  * </p>
  * Instances of this class are immutable and thread-safe.
  */
@@ -73,8 +69,7 @@ public final class StaticBody extends AbstractBody {
     }
 
     /**
-     * Creates an instance which is initialized by reading a body
-     * message from the provided stream.
+     * Creates an instance which is initialized by reading a body message from the provided stream.
      *
      * @param inStream stream to read message XML from
      * @return body instance
@@ -101,8 +96,7 @@ public final class StaticBody extends AbstractBody {
     }
 
     /**
-     * Creates an instance which is initialized by reading a body
-     * message from the provided raw XML string.
+     * Creates an instance which is initialized by reading a body message from the provided raw XML string.
      *
      * @param rawXML raw message XML in string form
      * @return body instance

@@ -19,8 +19,7 @@ package org.igniterealtime.jbosh;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Data type representing the getValue of the {@code maxpause} attribute of the
- * {@code bosh} element.
+ * Data type representing the getValue of the {@code maxpause} attribute of the {@code bosh} element.
  */
 final class AttrMaxPause extends AbstractIntegerAttr {
 
@@ -39,8 +38,7 @@ final class AttrMaxPause extends AbstractIntegerAttr {
      * Creates a new attribute instance from the provided String.
      *
      * @param str string representation of the attribute
-     * @return attribute instance or {@code null} if provided string is
-     * {@code null}
+     * @return attribute instance or {@code null} if provided string is {@code null}
      * @throws BOSHException on parse or validation failure
      */
     static AttrMaxPause createFromString(final String str)

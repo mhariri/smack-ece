@@ -17,8 +17,7 @@
 package org.igniterealtime.jbosh;
 
 /**
- * Exception class used by the BOSH API to minimize the number of checked
- * exceptions which must be handled by the user of the API.
+ * Exception class used by the BOSH API to minimize the number of checked exceptions which must be handled by the user of the API.
  */
 public class BOSHException extends Exception {
 
@@ -37,8 +36,8 @@ public class BOSHException extends Exception {
     }
 
     /**
-     * Creates a new exception isntance with the specified descriptive
-     * message and the underlying root cause of the exceptional condition.
+     * Creates a new exception isntance with the specified descriptive message and the underlying root cause of the exceptional
+     * condition.
      *
      * @param msg   description of the exceptional condition
      * @param cause root cause or instigator of the condition

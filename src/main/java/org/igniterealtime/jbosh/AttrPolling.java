@@ -19,8 +19,7 @@ package org.igniterealtime.jbosh;
 import java.util.concurrent.TimeUnit;
 
 /**
- * Data type representing the getValue of the {@code polling} attribute of the
- * {@code bosh} element.
+ * Data type representing the getValue of the {@code polling} attribute of the {@code bosh} element.
  */
 final class AttrPolling extends AbstractIntegerAttr {
 
@@ -39,8 +38,7 @@ final class AttrPolling extends AbstractIntegerAttr {
      * Creates a new attribute instance from the provided String.
      *
      * @param str string representation of the attribute
-     * @return instance of the attribute for the specified string, or
-     * {@code null} if input string is {@code null}
+     * @return instance of the attribute for the specified string, or {@code null} if input string is {@code null}
      * @throws BOSHException on parse or validation failure
      */
     static AttrPolling createFromString(final String str)

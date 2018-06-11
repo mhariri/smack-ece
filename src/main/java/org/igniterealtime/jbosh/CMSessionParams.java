@@ -17,9 +17,8 @@
 package org.igniterealtime.jbosh;
 
 /**
- * A BOSH connection manager session instance.  This consolidates the
- * configuration knowledge related to the CM session and provides a
- * mechanism by which
+ * A BOSH connection manager session instance.  This consolidates the configuration knowledge related to the CM session and provides
+ * a mechanism by which
  */
 public final class CMSessionParams {
 

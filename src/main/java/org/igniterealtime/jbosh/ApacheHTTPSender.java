@@ -36,8 +36,8 @@ import javax.net.ssl.SSLContext;
 import javax.net.ssl.SSLSocketFactory;
 
 /**
- * Implementation of the {@code HTTPSender} interface which uses the
- * Apache HttpClient API to send messages to the connection manager.
+ * Implementation of the {@code HTTPSender} interface which uses the Apache HttpClient API to send messages to the connection
+ * manager.
  */
 final class ApacheHTTPSender implements HTTPSender {
 

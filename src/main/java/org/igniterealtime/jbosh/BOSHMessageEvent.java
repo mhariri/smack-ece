@@ -54,8 +54,7 @@ public final class BOSHMessageEvent extends EventObject {
     }
 
     /**
-     * Creates a new message event for clients sending events to the
-     * connection manager.
+     * Creates a new message event for clients sending events to the connection manager.
      *
      * @param source sender of the message
      * @param body   message body
@@ -68,8 +67,7 @@ public final class BOSHMessageEvent extends EventObject {
     }
 
     /**
-     * Creates a new message event for clients receiving new messages
-     * from the connection manager.
+     * Creates a new message event for clients receiving new messages from the connection manager.
      *
      * @param source receiver of the message
      * @param body   message body

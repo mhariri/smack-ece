@@ -30,9 +30,8 @@ import javax.xml.XMLConstants;
 import javax.xml.namespace.QName;
 
 /**
- * Implementation of the BodyParser interface which uses the XmlPullParser
- * API.  When available, this API provides an order of magnitude performance
- * improvement over the default SAX parser implementation.
+ * Implementation of the BodyParser interface which uses the XmlPullParser API.  When available, this API provides an order of
+ * magnitude performance improvement over the default SAX parser implementation.
  */
 final class BodyParserXmlPull implements BodyParser {
 
@@ -43,10 +42,8 @@ final class BodyParserXmlPull implements BodyParser {
             Logger.getLogger(BodyParserXmlPull.class.getName());
 
     /**
-     * Thread local to contain a XmlPullParser instance for each thread that
-     * attempts to use one.  This allows us to gain an order of magnitude of
-     * performance as a result of not constructing parsers for each
-     * invocation while retaining thread safety.
+     * Thread local to contain a XmlPullParser instance for each thread that attempts to use one.  This allows us to gain an order
+     * of magnitude of performance as a result of not constructing parsers for each invocation while retaining thread safety.
      */
     private static final ThreadLocal<SoftReference<XmlPullParser>> XPP_PARSER =
             new ThreadLocal<SoftReference<XmlPullParser>>() {

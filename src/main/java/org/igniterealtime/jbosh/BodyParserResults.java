@@ -20,14 +20,13 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * Data extracted from a raw XML message by a BodyParser implementation.
- * Currently, this is limited to the attributes of the wrapper element.
+ * Data extracted from a raw XML message by a BodyParser implementation. Currently, this is limited to the attributes of the wrapper
+ * element.
  */
 final class BodyParserResults {
 
     /**
-     * Map of qualified names to their values.  This map is defined to
-     * match the requirement of the {@code Body} class to prevent
+     * Map of qualified names to their values.  This map is defined to match the requirement of the {@code Body} class to prevent
      * excessive copying.
      */
     private final Map<BodyQName, String> attrs =

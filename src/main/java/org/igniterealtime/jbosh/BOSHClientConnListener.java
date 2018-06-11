@@ -17,15 +17,13 @@
 package org.igniterealtime.jbosh;
 
 /**
- * Interface used by parties interested in monitoring the connection state
- * of a client session.
+ * Interface used by parties interested in monitoring the connection state of a client session.
  */
 public interface BOSHClientConnListener {
 
     /**
-     * Called when the connection state of the client which the listener
-     * is registered against has changed.  The event object supplied can
-     * be used to determine the current session state.
+     * Called when the connection state of the client which the listener is registered against has changed.  The event object
+     * supplied can be used to determine the current session state.
      *
      * @param connEvent connection event describing the state
      */

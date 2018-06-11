@@ -13,8 +13,7 @@ import org.jxmpp.jid.impl.JidCreate;
 import org.jxmpp.stringprep.XmppStringprepException;
 
 /**
- * Converts an ECE's style incoming chat message to a proper
- * XMPP incoming message.
+ * Converts an ECE's style incoming chat message to a proper XMPP incoming message.
  */
 public class EceToXmppIncomingMessageConverter {
 
@@ -29,8 +28,10 @@ public class EceToXmppIncomingMessageConverter {
     );
 
     /**
-     * Modifies ECE's incoming chat message to conform to XMPP standard incoming
-     * chat message. Otherwise Smack will ignore the incoming message.
+     * Modifies ECE's incoming chat message to conform to XMPP standard incoming chat message. Otherwise Smack will ignore the
+     * incoming message.
+     *
+     * @param packet to modify to make it compatible with XMPP
      */
     public static void modifyIncomingChatMessage(Stanza packet) {
         Message message = (Message) packet;

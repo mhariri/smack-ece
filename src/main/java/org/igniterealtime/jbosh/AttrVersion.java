@@ -17,8 +17,7 @@
 package org.igniterealtime.jbosh;
 
 /**
- * Data type representing the getValue of the {@code ver} attribute of the
- * {@code bosh} element.
+ * Data type representing the getValue of the {@code ver} attribute of the {@code bosh} element.
  */
 final class AttrVersion extends AbstractAttr<String> {
 
@@ -103,8 +102,7 @@ final class AttrVersion extends AbstractAttr<String> {
      * Creates a new attribute instance from the provided String.
      *
      * @param str string representation of the attribute
-     * @return attribute instance or {@code null} if provided string is
-     * {@code null}
+     * @return attribute instance or {@code null} if provided string is {@code null}
      * @throws BOSHException on parse or validation failure
      */
     static AttrVersion createFromString(final String str)

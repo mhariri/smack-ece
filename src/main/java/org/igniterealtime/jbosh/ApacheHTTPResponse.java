@@ -85,14 +85,12 @@ final class ApacheHTTPResponse implements HTTPResponse {
     private boolean sent;
 
     /**
-     * Exception to throw when the response data is attempted to be accessed,
-     * or {@code null} if no exception should be thrown.
+     * Exception to throw when the response data is attempted to be accessed, or {@code null} if no exception should be thrown.
      */
     private BOSHException toThrow;
 
     /**
-     * The response body which was received from the server or {@code null}
-     * if that has not yet happened.
+     * The response body which was received from the server or {@code null} if that has not yet happened.
      */
     private AbstractBody body;
 
@@ -105,13 +103,12 @@ final class ApacheHTTPResponse implements HTTPResponse {
     // Constructors:
 
     /**
-     * Create and send a new request to the upstream connection manager,
-     * providing deferred access to the results to be returned.
+     * Create and send a new request to the upstream connection manager, providing deferred access to the results to be returned.
      *
      * @param client  client instance to use when sending the request
      * @param cfg     client configuration
-     * @param params  connection manager parameters from the session creation
-     *                response, or {@code null} if the session has not yet been established
+     * @param params  connection manager parameters from the session creation response, or {@code null} if the session has not yet
+     *                been established
      * @param request body of the client request
      */
     ApacheHTTPResponse(
@@ -152,7 +149,7 @@ final class ApacheHTTPResponse implements HTTPResponse {
             if (cfg.isCompressionEnabled()) {
                 post.setHeader(ACCEPT_ENCODING, ACCEPT_ENCODING_VAL);
             }
-            for(Header header: cfg.getHttpHeaders()) {
+            for (Header header : cfg.getHttpHeaders()) {
                 post.addHeader(header);
             }
         } catch (Exception e) {
@@ -221,8 +218,7 @@ final class ApacheHTTPResponse implements HTTPResponse {
     // Package-private methods:
 
     /**
-     * Await the response, storing the result in the instance variables of
-     * this class when they arrive.
+     * Await the response, storing the result in the instance variables of this class when they arrive.
      *
      * @throws InterruptedException if interrupted while awaiting the response
      * @throws BOSHException        on communication failure

@@ -1,4 +1,4 @@
-<param name='chat_queue_name'>
+<param name='chat_queue_name' xmlns='http://bindings.egain.com/chat'>
     <mapping>
         <attributeName>chat_queue</attributeName>
         <objectName>casemgmt::activity_data</objectName>

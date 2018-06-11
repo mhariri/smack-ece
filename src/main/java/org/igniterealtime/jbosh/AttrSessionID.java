@@ -17,8 +17,7 @@
 package org.igniterealtime.jbosh;
 
 /**
- * Data type representing the getValue of the {@code sid} attribute of the
- * {@code bosh} element.
+ * Data type representing the getValue of the {@code sid} attribute of the {@code bosh} element.
  */
 final class AttrSessionID extends AbstractAttr<String> {
 

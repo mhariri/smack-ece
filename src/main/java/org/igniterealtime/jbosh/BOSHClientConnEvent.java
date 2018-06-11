@@ -35,14 +35,12 @@ public final class BOSHClientConnEvent extends EventObject {
     private static final long serialVersionUID = 1L;
 
     /**
-     * Boolean flag indicating whether or not a session has been established
-     * and is currently active.
+     * Boolean flag indicating whether or not a session has been established and is currently active.
      */
     private final boolean connected;
 
     /**
-     * List of outstanding requests which may not have been sent and/or
-     * acknowledged by the remote CM.
+     * List of outstanding requests which may not have been sent and/or acknowledged by the remote CM.
      */
     private final List<ComposableBody> requests;
 
@@ -55,12 +53,9 @@ public final class BOSHClientConnEvent extends EventObject {
      * Creates a new connection event instance.
      *
      * @param source     event source
-     * @param cConnected flag indicating whether or not the session is
-     *                   currently active
-     * @param cRequests  outstanding requests when an error condition is
-     *                   detected, or {@code null} when not an error condition
-     * @param cCause     cause of the error condition, or {@code null} when no
-     *                   error condition is present
+     * @param cConnected flag indicating whether or not the session is currently active
+     * @param cRequests  outstanding requests when an error condition is detected, or {@code null} when not an error condition
+     * @param cCause     cause of the error condition, or {@code null} when no error condition is present
      */
     private BOSHClientConnEvent(
             final BOSHClient source,
@@ -103,8 +98,7 @@ public final class BOSHClientConnEvent extends EventObject {
     }
 
     /**
-     * Creates a new successful connection closed event.  This represents
-     * a clean termination of the client session.
+     * Creates a new successful connection closed event.  This represents a clean termination of the client session.
      *
      * @param source client which has been disconnected
      * @return event instance
@@ -115,12 +109,10 @@ public final class BOSHClientConnEvent extends EventObject {
     }
 
     /**
-     * Creates a connection closed on error event.  This represents
-     * an unexpected termination of the client session.
+     * Creates a connection closed on error event.  This represents an unexpected termination of the client session.
      *
      * @param source      client which has been disconnected
-     * @param outstanding list of requests which may not have been received
-     *                    by the remote connection manager
+     * @param outstanding list of requests which may not have been received by the remote connection manager
      * @param cause       cause of termination
      * @return event instance
      */
@@ -141,8 +133,7 @@ public final class BOSHClientConnEvent extends EventObject {
     }
 
     /**
-     * Returns whether or not the session has been successfully established
-     * and is currently active.
+     * Returns whether or not the session has been successfully established and is currently active.
      *
      * @return {@code true} if a session is active, {@code false} otherwise
      */
@@ -151,37 +142,32 @@ public final class BOSHClientConnEvent extends EventObject {
     }
 
     /**
-     * Returns whether or not this event indicates an error condition.  This
-     * will never return {@code true} when {@code isConnected()} returns
-     * {@code true}.
+     * Returns whether or not this event indicates an error condition.  This will never return {@code true} when {@code
+     * isConnected()} returns {@code true}.
      *
-     * @return {@code true} if the event indicates a terminal error has
-     * occurred, {@code false} otherwise.
+     * @return {@code true} if the event indicates a terminal error has occurred, {@code false} otherwise.
      */
     public boolean isError() {
         return cause != null;
     }
 
     /**
-     * Returns the underlying cause of the error condition.  This method is
-     * guaranteed to return {@code null} when @{code isError()} returns
-     * {@code false}.  Similarly, this method is guaranteed to return
-     * non-@{code null} if {@code isError()} returns {@code true}.
+     * Returns the underlying cause of the error condition.  This method is guaranteed to return {@code null} when @{code isError()}
+     * returns {@code false}.  Similarly, this method is guaranteed to return non-@{code null} if {@code isError()} returns {@code
+     * true}.
      *
-     * @return underlying cause of the error condition, or {@code null} if
-     * this event does not represent an error condition
+     * @return underlying cause of the error condition, or {@code null} if this event does not represent an error condition
      */
     public Throwable getCause() {
         return cause;
     }
 
     /**
-     * Get the list of requests which may not have been sent or were not
-     * acknowledged by the remote connection manager prior to session
-     * termination.
+     * Get the list of requests which may not have been sent or were not acknowledged by the remote connection manager prior to
+     * session termination.
      *
-     * @return list of messages which may not have been received by the remote
-     * connection manager, or an empty list if the session is still connected
+     * @return list of messages which may not have been received by the remote connection manager, or an empty list if the session
+     * is still connected
      */
     public List<ComposableBody> getOutstandingRequests() {
         return requests;

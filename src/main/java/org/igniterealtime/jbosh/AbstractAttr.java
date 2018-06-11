@@ -17,13 +17,10 @@
 package org.igniterealtime.jbosh;
 
 /**
- * Abstract base class for creating BOSH attribute classes.  Concrete
- * implementations of this class will naturally inherit the underlying
- * type's behavior for {@code equals()}, {@code hashCode()},
- * {@code toString()}, and {@code compareTo()}, allowing for the easy
- * creation of objects which extend existing trivial types.  This was done
- * to comply with the prefactoring rule declaring, "when you are being
- * abstract, be abstract all the way".
+ * Abstract base class for creating BOSH attribute classes.  Concrete implementations of this class will naturally inherit the
+ * underlying type's behavior for {@code equals()}, {@code hashCode()}, {@code toString()}, and {@code compareTo()}, allowing for
+ * the easy creation of objects which extend existing trivial types.  This was done to comply with the prefactoring rule declaring,
+ * "when you are being abstract, be abstract all the way".
  *
  * @param <T> type of the extension object
  */

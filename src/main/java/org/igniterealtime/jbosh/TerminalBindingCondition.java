@@ -164,24 +164,20 @@ final class TerminalBindingCondition {
     }
 
     /**
-     * Lookup the terminal binding condition instance with the condition
-     * name specified.
+     * Lookup the terminal binding condition instance with the condition name specified.
      *
      * @param condStr condition name
-     * @return terminal binding condition instance, or {@code null} if no
-     * instance is known by the name specified
+     * @return terminal binding condition instance, or {@code null} if no instance is known by the name specified
      */
     static TerminalBindingCondition forString(final String condStr) {
         return COND_TO_INSTANCE.get(condStr);
     }
 
     /**
-     * Lookup the terminal binding condition instance associated with the
-     * HTTP response code specified.
+     * Lookup the terminal binding condition instance associated with the HTTP response code specified.
      *
      * @param httpRespCode HTTP response code
-     * @return terminal binding condition instance, or {@code null} if no
-     * instance is known by the response code specified
+     * @return terminal binding condition instance, or {@code null} if no instance is known by the response code specified
      */
     static TerminalBindingCondition forHTTPResponseCode(final int httpRespCode) {
         return CODE_TO_INSTANCE.get(Integer.valueOf(httpRespCode));

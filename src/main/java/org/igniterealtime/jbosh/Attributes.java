@@ -19,10 +19,8 @@ package org.igniterealtime.jbosh;
 import javax.xml.XMLConstants;
 
 /**
- * Class containing constants for attribute definitions used by the
- * XEP-0124 specification.  We shouldn't need to expose these outside
- * our package, since nobody else should be needing to worry about
- * them.
+ * Class containing constants for attribute definitions used by the XEP-0124 specification.  We shouldn't need to expose these
+ * outside our package, since nobody else should be needing to worry about them.
  */
 final class Attributes {
 

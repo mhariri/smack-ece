@@ -38,11 +38,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * BOSH Client session instance.  Each communication session with a remote
- * connection manager is represented and handled by an instance of this
- * class.  This is the main entry point for client-side communications.
- * To create a new session, a client configuration must first be created
- * and then used to create a client instance:
+ * BOSH Client session instance.  Each communication session with a remote connection manager is represented and handled by an
+ * instance of this class.  This is the main entry point for client-side communications. To create a new session, a client
+ * configuration must first be created and then used to create a client instance:
  * <pre>
  * BOSHClientConfig cfg = BOSHClientConfig.Builder.create(
  *         "http://server:1234/httpbind", "jabber.org")
@@ -50,45 +48,33 @@ import java.util.logging.Logger;
  *     .build();
  * BOSHClient client = BOSHClient.create(cfg);
  * </pre>
- * Additional client configuration options are available.  See the
- * {@code BOSHClientConfig.Builder} class for more information.
+ * Additional client configuration options are available.  See the {@code BOSHClientConfig.Builder} class for more information.
  * <p>
- * Once a {@code BOSHClient} instance has been created, communication with
- * the remote connection manager can begin.  No attempt will be made to
- * establish a connection to the connection manager until the first call
- * is made to the {@code send(ComposableBody)} method.  Note that it is
- * possible to send an empty body to cause an immediate connection attempt
- * to the connection manager.  Sending an empty message would look like
- * the following:
+ * Once a {@code BOSHClient} instance has been created, communication with the remote connection manager can begin.  No attempt will
+ * be made to establish a connection to the connection manager until the first call is made to the {@code send(ComposableBody)}
+ * method.  Note that it is possible to send an empty body to cause an immediate connection attempt to the connection manager.
+ * Sending an empty message would look like the following:
  * </p>
  * <pre>
  * client.send(ComposableBody.builder().build());
  * </pre>
- * For more information on creating body messages with content, see the
- * {@code ComposableBody.Builder} class documentation.
+ * For more information on creating body messages with content, see the {@code ComposableBody.Builder} class documentation.
  * <p>
- * Once a session has been successfully started, the client instance can be
- * used to send arbitrary payload data.  All aspects of the BOSH
- * protocol involving setting and processing attributes in the BOSH
- * namespace will be handled by the client code transparently and behind the
- * scenes.  The user of the client instance can therefore concentrate
- * entirely on the content of the message payload, leaving the semantics of
- * the BOSH protocol to the client implementation.
+ * Once a session has been successfully started, the client instance can be used to send arbitrary payload data.  All aspects of the
+ * BOSH protocol involving setting and processing attributes in the BOSH namespace will be handled by the client code transparently
+ * and behind the scenes.  The user of the client instance can therefore concentrate entirely on the content of the message payload,
+ * leaving the semantics of the BOSH protocol to the client implementation.
  * </p>
  * <p>
- * To be notified of incoming messages from the remote connection manager,
- * a {@code BOSHClientResponseListener} should be added to the client instance.
- * All incoming messages will be published to all response listeners as they
- * arrive and are processed.  As with the transmission of payload data via
- * the {@code send(ComposableBody)} method, there is no need to worry about
- * handling of the BOSH attributes, since this is handled behind the scenes.
+ * To be notified of incoming messages from the remote connection manager, a {@code BOSHClientResponseListener} should be added to
+ * the client instance. All incoming messages will be published to all response listeners as they arrive and are processed.  As with
+ * the transmission of payload data via the {@code send(ComposableBody)} method, there is no need to worry about handling of the
+ * BOSH attributes, since this is handled behind the scenes.
  * </p>
  * <p>
- * If the connection to the remote connection manager is terminated (either
- * explicitly or due to a terminal condition of some sort), all connection
- * listeners will be notified.  After the connection has been closed, the
- * client instance is considered dead and a new one must be created in order
- * to resume communications with the remote server.
+ * If the connection to the remote connection manager is terminated (either explicitly or due to a terminal condition of some sort),
+ * all connection listeners will be notified.  After the connection has been closed, the client instance is considered dead and a
+ * new one must be created in order to resume communications with the remote server.
  * </p>
  * Instances of this class are thread-safe.
  *
@@ -136,8 +122,7 @@ public final class BOSHClient {
     private static final int DEFAULT_EMPTY_REQUEST_DELAY = 100;
 
     /**
-     * Amount of time to wait before sending an empty request, in
-     * milliseconds.
+     * Amount of time to wait before sending an empty request, in milliseconds.
      */
     private static final int EMPTY_REQUEST_DELAY = Integer.getInteger(
             BOSHClient.class.getName() + ".emptyRequestDelay",
@@ -149,10 +134,8 @@ public final class BOSHClient {
     private static final int DEFAULT_PAUSE_MARGIN = 500;
 
     /**
-     * The amount of time in milliseconds which will be reserved as a
-     * safety margin when scheduling empty requests against a maxpause
-     * value.   This should give us enough time to build the message
-     * and transport it to the remote host.
+     * The amount of time in milliseconds which will be reserved as a safety margin when scheduling empty requests against a
+     * maxpause value.   This should give us enough time to build the message and transport it to the remote host.
      */
     private static final int PAUSE_MARGIN = Integer.getInteger(
             BOSHClient.class.getName() + ".pauseMargin",
@@ -209,8 +192,7 @@ public final class BOSHClient {
      */
     private final Condition notEmpty = lock.newCondition();
     /**
-     * Condition indicating that there are available slots for sending
-     * messages.
+     * Condition indicating that there are available slots for sending messages.
      */
     private final Condition notFull = lock.newCondition();
     /**
@@ -249,9 +231,8 @@ public final class BOSHClient {
      */
 
     /**
-     * An array of <tt>RequestProcessor</tt> which represents a Thread which is
-     * used to process responses from the connection manager.  Becomes null when
-     * session is terminated.
+     * An array of <tt>RequestProcessor</tt> which represents a Thread which is used to process responses from the connection
+     * manager.  Becomes null when session is terminated.
      */
     private RequestProcessor[] procThreads;
 
@@ -261,8 +242,7 @@ public final class BOSHClient {
     private ScheduledFuture<?> emptyRequestFuture;
 
     /**
-     * Connection Manager session parameters.  Only available when in a
-     * connected state.
+     * Connection Manager session parameters.  Only available when in a connected state.
      */
     private CMSessionParams cmParams;
 
@@ -272,20 +252,18 @@ public final class BOSHClient {
     private LinkedList<HTTPExchange> exchanges = new LinkedList<HTTPExchange>();
 
     /**
-     * Set of RIDs which have been received, for the purpose of sending
-     * response acknowledgements.
+     * Set of RIDs which have been received, for the purpose of sending response acknowledgements.
      */
     private SortedSet<Long> pendingResponseAcks = new TreeSet<Long>();
 
     /**
-     * The highest RID that we've already received a response for.  This value
-     * is used to implement response acks.
+     * The highest RID that we've already received a response for.  This value is used to implement response acks.
      */
     private Long responseAck = Long.valueOf(-1L);
 
     /**
-     * List of requests which have been made but not yet acknowledged.  This
-     * list remains unpopulated if the CM is not acking requests.
+     * List of requests which have been made but not yet acknowledged.  This list remains unpopulated if the CM is not acking
+     * requests.
      */
     private List<ComposableBody> pendingRequestAcks =
             new ArrayList<ComposableBody>();
@@ -316,8 +294,7 @@ public final class BOSHClient {
     }
 
     /**
-     * Create a new BOSH client session using the client configuration
-     * information provided.
+     * Create a new BOSH client session using the client configuration information provided.
      *
      * @param clientCfg session configuration
      * @return BOSH session instance
@@ -334,32 +311,27 @@ public final class BOSHClient {
     // Public methods:
 
     /**
-     * Determines if the message body specified indicates a request to
-     * pause the session.
+     * Determines if the message body specified indicates a request to pause the session.
      *
      * @param msg message to evaluate
-     * @return {@code true} if the message is a pause request, {@code false}
-     * otherwise
+     * @return {@code true} if the message is a pause request, {@code false} otherwise
      */
     private static boolean isPause(final AbstractBody msg) {
         return msg.getAttribute(Attributes.PAUSE) != null;
     }
 
     /**
-     * Determines if the message body specified indicates a termination of
-     * the session.
+     * Determines if the message body specified indicates a termination of the session.
      *
      * @param msg message to evaluate
-     * @return {@code true} if the message is a session termination,
-     * {@code false} otherwise
+     * @return {@code true} if the message is a session termination, {@code false} otherwise
      */
     private static boolean isTermination(final AbstractBody msg) {
         return TERMINATE.equals(msg.getAttribute(Attributes.TYPE));
     }
 
     /**
-     * Determines whether or not the response indicates a recoverable
-     * binding condition (as per XEP-0124 section 17).
+     * Determines whether or not the response indicates a recoverable binding condition (as per XEP-0124 section 17).
      *
      * @param resp response body
      * @return {@code true} if it does, {@code false} otherwise
@@ -370,8 +342,7 @@ public final class BOSHClient {
     }
 
     /**
-     * Get the client configuration that was used to create this client
-     * instance.
+     * Get the client configuration that was used to create this client instance.
      *
      * @return client configuration
      */
@@ -419,8 +390,7 @@ public final class BOSHClient {
     }
 
     /**
-     * Removes a request message listener from the session, if previously
-     * added.
+     * Removes a request message listener from the session, if previously added.
      *
      * @param listener instance to remove
      */
@@ -446,8 +416,7 @@ public final class BOSHClient {
     }
 
     /**
-     * Removes a response message listener from the session, if previously
-     * added.
+     * Removes a response message listener from the session, if previously added.
      *
      * @param listener instance to remove
      */
@@ -460,17 +429,14 @@ public final class BOSHClient {
     }
 
     /**
-     * Send the provided message data to the remote connection manager.  The
-     * provided message body does not need to have any BOSH-specific attribute
-     * information set.  It only needs to contain the actual message payload
-     * that should be delivered to the remote server.
+     * Send the provided message data to the remote connection manager.  The provided message body does not need to have any
+     * BOSH-specific attribute information set.  It only needs to contain the actual message payload that should be delivered to the
+     * remote server.
      * <p>
-     * The first call to this method will result in a connection attempt
-     * to the remote connection manager.  Subsequent calls to this method
-     * will block until the underlying session state allows for the message
-     * to be transmitted.  In certain scenarios - such as when the maximum
-     * number of outbound connections has been reached - calls to this method
-     * will block for short periods of time.
+     * The first call to this method will result in a connection attempt to the remote connection manager.  Subsequent calls to this
+     * method will block until the underlying session state allows for the message to be transmitted.  In certain scenarios - such
+     * as when the maximum number of outbound connections has been reached - calls to this method will block for short periods of
+     * time.
      * </p>
      *
      * @param body message data to send to remote server
@@ -519,22 +485,16 @@ public final class BOSHClient {
     }
 
     /**
-     * Attempt to pause the current session.  When supported by the remote
-     * connection manager, pausing the session will result in the connection
-     * manager closing out all outstanding requests (including the pause
-     * request) and increases the inactivity timeout of the session.  The
-     * exact value of the temporary timeout is dependent upon the connection
-     * manager.  This method should be used if a client encounters an
-     * exceptional temporary situation during which it will be unable to send
-     * requests to the connection manager for a period of time greater than
-     * the maximum inactivity period.
+     * Attempt to pause the current session.  When supported by the remote connection manager, pausing the session will result in
+     * the connection manager closing out all outstanding requests (including the pause request) and increases the inactivity
+     * timeout of the session.  The exact value of the temporary timeout is dependent upon the connection manager.  This method
+     * should be used if a client encounters an exceptional temporary situation during which it will be unable to send requests to
+     * the connection manager for a period of time greater than the maximum inactivity period.
      * <p>
-     * The session will revert back to it's normal, unpaused state when the
-     * client sends it's next message.
+     * The session will revert back to it's normal, unpaused state when the client sends it's next message.
      *
-     * @return {@code true} if the connection manager supports session pausing,
-     * {@code false} if the connection manager does not support session
-     * pausing or if the session has not yet been established
+     * @return {@code true} if the connection manager supports session pausing, {@code false} if the connection manager does not
+     * support session pausing or if the session has not yet been established
      */
     public boolean pause() {
         assertUnlocked();
@@ -563,8 +523,7 @@ public final class BOSHClient {
     }
 
     /**
-     * End the BOSH session by disconnecting from the remote BOSH connection
-     * manager.
+     * End the BOSH session by disconnecting from the remote BOSH connection manager.
      *
      * @throws BOSHException when termination message cannot be sent
      */
@@ -576,9 +535,8 @@ public final class BOSHClient {
     // Package-private methods:
 
     /**
-     * End the BOSH session by disconnecting from the remote BOSH connection
-     * manager, sending the provided content in the final connection
-     * termination message.
+     * End the BOSH session by disconnecting from the remote BOSH connection manager, sending the provided content in the final
+     * connection termination message.
      *
      * @param msg final message to send
      * @throws BOSHException when termination message cannot be sent
@@ -595,11 +553,9 @@ public final class BOSHClient {
     }
 
     /**
-     * Forcibly close this client session instance.  The preferred mechanism
-     * to close the connection is to send a disconnect message and wait for
-     * organic termination.  Calling this method simply shuts down the local
-     * session without sending a termination message, releasing all resources
-     * associated with the session.
+     * Forcibly close this client session instance.  The preferred mechanism to close the connection is to send a disconnect message
+     * and wait for organic termination.  Calling this method simply shuts down the local session without sending a termination
+     * message, releasing all resources associated with the session.
      */
     public void close() {
         dispose(new BOSHException("Session explicitly closed by caller"));
@@ -655,8 +611,7 @@ public final class BOSHClient {
     }
 
     /**
-     * Initialize the session.  This initializes the underlying HTTP
-     * transport implementation and starts the receive thread.
+     * Initialize the session.  This initializes the underlying HTTP transport implementation and starts the receive thread.
      */
     private void init() {
         assertUnlocked();
@@ -684,8 +639,7 @@ public final class BOSHClient {
     /**
      * Destroy this session.
      *
-     * @param cause the reason for the session termination, or {@code null}
-     *              for normal termination
+     * @param cause the reason for the session termination, or {@code null} for normal termination
      */
     private void dispose(final Throwable cause) {
         assertUnlocked();
@@ -729,13 +683,11 @@ public final class BOSHClient {
     }
 
     /**
-     * Evaluates the HTTP response code and response message and returns the
-     * terminal binding condition that it describes, if any.
+     * Evaluates the HTTP response code and response message and returns the terminal binding condition that it describes, if any.
      *
      * @param respCode HTTP response code
      * @param respBody response body
-     * @return terminal binding condition, or {@code null} if not a terminal
-     * binding condition message
+     * @return terminal binding condition, or {@code null} if not a terminal binding condition message
      */
     private TerminalBindingCondition getTerminalBindingCondition(
             final int respCode,
@@ -754,12 +706,10 @@ public final class BOSHClient {
     }
 
     /**
-     * Determines if the message specified is immediately sendable or if it
-     * needs to block until the session state changes.
+     * Determines if the message specified is immediately sendable or if it needs to block until the session state changes.
      *
      * @param msg message to evaluate
-     * @return {@code true} if the message can be immediately sent,
-     * {@code false} otherwise
+     * @return {@code true} if the message can be immediately sent, {@code false} otherwise
      */
     private boolean isImmediatelySendable(final AbstractBody msg) {
         assertLocked();
@@ -797,8 +747,7 @@ public final class BOSHClient {
     }
 
     /**
-     * Blocks until either the message provided becomes immediately
-     * sendable or until the session is terminated.
+     * Blocks until either the message provided becomes immediately sendable or until the session is terminated.
      *
      * @param msg message to evaluate
      */
@@ -815,8 +764,7 @@ public final class BOSHClient {
     }
 
     /**
-     * Modifies the specified body message such that it becomes a new
-     * BOSH session creation request.
+     * Modifies the specified body message such that it becomes a new BOSH session creation request.
      *
      * @param rid  request ID to use
      * @param orig original body to modify
@@ -848,8 +796,7 @@ public final class BOSHClient {
     }
 
     /**
-     * Applies routing information to the request message who's builder has
-     * been provided.
+     * Applies routing information to the request message who's builder has been provided.
      *
      * @param builder builder instance to add routing information to
      */
@@ -863,8 +810,7 @@ public final class BOSHClient {
     }
 
     /**
-     * Applies the local station ID information to the request message who's
-     * builder has been provided.
+     * Applies the local station ID information to the request message who's builder has been provided.
      *
      * @param builder builder instance to add station ID information to
      */
@@ -878,8 +824,7 @@ public final class BOSHClient {
     }
 
     /**
-     * Applies existing session data to the outbound request, returning the
-     * modified request.
+     * Applies existing session data to the outbound request, returning the modified request.
      * <p>
      * This method assumes the lock is currently held.
      *
@@ -901,12 +846,10 @@ public final class BOSHClient {
     }
 
     /**
-     * Sets the 'ack' attribute of the request to the value of the highest
-     * 'rid' of a request for which it has already received a response in the
-     * case where it has also received all responses associated with lower
-     * 'rid' values.  The only exception is that, after its session creation
-     * request, the client SHOULD NOT include an 'ack' attribute in any request
-     * if it has received responses to all its previous requests.
+     * Sets the 'ack' attribute of the request to the value of the highest 'rid' of a request for which it has already received a
+     * response in the case where it has also received all responses associated with lower 'rid' values.  The only exception is
+     * that, after its session creation request, the client SHOULD NOT include an 'ack' attribute in any request if it has received
+     * responses to all its previous requests.
      *
      * @param builder message builder
      * @param rid     current request RID
@@ -935,8 +878,7 @@ public final class BOSHClient {
      * <p>
      * This method is run in the processing thread.
      *
-     * @param idx the {@link #procThreads} index of the "RequestProcessor"
-     *            for which this method is executed.
+     * @param idx the {@link #procThreads} index of the "RequestProcessor" for which this method is executed.
      */
     private void processMessages(int idx) {
         LOG.finest("Processing thread " + idx + " starting...");
@@ -977,13 +919,10 @@ public final class BOSHClient {
     }
 
     /**
-     * Get the next message exchange to process, blocking until one becomes
-     * available if nothing is already waiting for processing.
+     * Get the next message exchange to process, blocking until one becomes available if nothing is already waiting for processing.
      *
-     * @param idx the {@link #procThreads} index of the "RequestProcessor"
-     *            for which this method is executed.
-     * @return next available exchange to process, or {@code null} if no
-     * exchanges are immediately available
+     * @param idx the {@link #procThreads} index of the "RequestProcessor" for which this method is executed.
+     * @return next available exchange to process, or {@code null} if no exchanges are immediately available
      */
     private HTTPExchange nextExchange(int idx) {
         assertUnlocked();
@@ -1013,14 +952,11 @@ public final class BOSHClient {
     }
 
     /**
-     * Finds and claims the exchange that has not been taken by other request
-     * processor.
+     * Finds and claims the exchange that has not been taken by other request processor.
      *
-     * @param idx the {@link #procThreads} index of the "RequestProcessor"
-     *            for which this method is executed.
+     * @param idx the {@link #procThreads} index of the "RequestProcessor" for which this method is executed.
      * @return <tt>HTTPExchange</tt> claimed for
-     * the <tt>{@link RequestProcessor}</tt> or <tt>null</tt> if there are no
-     * unclaimed exchanges available at this time.
+     * the <tt>{@link RequestProcessor}</tt> or <tt>null</tt> if there are no unclaimed exchanges available at this time.
      */
     private HTTPExchange claimExchange(int idx) {
         assertLocked();
@@ -1054,8 +990,7 @@ public final class BOSHClient {
     /**
      * Finds <tt>RequestProcessor</tt> which has claimed given exchange.
      *
-     * @param exch the <tt>HTTPExchange</tt> for which <tt>RequestProcessor</tt>
-     *             is to be found.
+     * @param exch the <tt>HTTPExchange</tt> for which <tt>RequestProcessor</tt> is to be found.
      * @return <tt>{@link RequestProcessor}</tt> that has claimed given
      * <tt>HTTPExchange</tt> or <tt>null</tt> if the exchange has not been
      * claimed yet.
@@ -1073,8 +1008,7 @@ public final class BOSHClient {
     }
 
     /**
-     * Process the next, provided exchange.  This is the main processing
-     * method of the receive thread.
+     * Process the next, provided exchange.  This is the main processing method of the receive thread.
      *
      * @param exch message exchange to process
      */
@@ -1204,8 +1138,7 @@ public final class BOSHClient {
     }
 
     /**
-     * Checks the value of REQ attribute received from the CM and adjusts
-     * the size of the request processors pool.
+     * Checks the value of REQ attribute received from the CM and adjusts the size of the request processors pool.
      */
     private void adjustRequestProcessorsPool() {
         assertLocked();
@@ -1254,8 +1187,7 @@ public final class BOSHClient {
     }
 
     /**
-     * Calculates the default empty request delay/interval to use for the
-     * active session.
+     * Calculates the default empty request delay/interval to use for the active session.
      *
      * @return delay in milliseconds
      */
@@ -1277,8 +1209,7 @@ public final class BOSHClient {
     }
 
     /**
-     * Schedule an empty request to be sent if no other requests are
-     * sent in a reasonable amount of time.
+     * Schedule an empty request to be sent if no other requests are sent in a reasonable amount of time.
      */
     private void scheduleEmptyRequest(long delay) {
         assertLocked();
@@ -1306,9 +1237,8 @@ public final class BOSHClient {
     }
 
     /**
-     * Sends an empty request to maintain session requirements.  If a request
-     * is sent within a reasonable time window, the empty request transmission
-     * will be cancelled.
+     * Sends an empty request to maintain session requirements.  If a request is sent within a reasonable time window, the empty
+     * request transmission will be cancelled.
      */
     private void sendEmptyRequest() {
         assertUnlocked();
@@ -1346,8 +1276,8 @@ public final class BOSHClient {
     }
 
     /**
-     * Checks to see if the response indicates a terminal binding condition
-     * (as per XEP-0124 section 17).  If it does, an exception is thrown.
+     * Checks to see if the response indicates a terminal binding condition (as per XEP-0124 section 17).  If it does, an exception
+     * is thrown.
      *
      * @param body response body to evaluate
      * @param code HTTP response code
@@ -1368,13 +1298,10 @@ public final class BOSHClient {
     }
 
     /**
-     * Process the request to determine if the empty request delay
-     * can be determined by looking to see if the request is a pause
-     * request.  If it can, the request's delay is returned, otherwise
-     * the default delay is returned.
+     * Process the request to determine if the empty request delay can be determined by looking to see if the request is a pause
+     * request.  If it can, the request's delay is returned, otherwise the default delay is returned.
      *
-     * @return delay in milliseconds that should elapse prior to an
-     * empty message being sent
+     * @return delay in milliseconds that should elapse prior to an empty message being sent
      */
     private long processPauseRequest(
             final AbstractBody req) {
@@ -1400,8 +1327,7 @@ public final class BOSHClient {
     }
 
     /**
-     * Check the response for request acknowledgements and take appropriate
-     * action.
+     * Check the response for request acknowledgements and take appropriate action.
      * <p>
      * This method assumes the lock is currently held.
      *
@@ -1447,8 +1373,7 @@ public final class BOSHClient {
     }
 
     /**
-     * Process the response in order to update the response acknowlegement
-     * data.
+     * Process the response in order to update the response acknowlegement data.
      * <p>
      * This method assumes the lock is currently held.
      *
@@ -1476,14 +1401,12 @@ public final class BOSHClient {
     }
 
     /**
-     * Process the response in order to check for and respond to any potential
-     * ack reports.
+     * Process the response in order to check for and respond to any potential ack reports.
      * <p>
      * This method assumes the lock is currently held.
      *
      * @param resp response
-     * @return exchange to transmit if a resend is to be performed, or
-     * {@code null} if no resend is necessary
+     * @return exchange to transmit if a resend is to be performed, or {@code null} if no resend is necessary
      * @throws BOSHException when a a retry is needed but cannot be performed
      */
     private HTTPExchange processResponseAcknowledgementReport(
@@ -1530,8 +1453,7 @@ public final class BOSHClient {
     }
 
     /**
-     * Notifies all request listeners that the specified request is being
-     * sent.
+     * Notifies all request listeners that the specified request is being sent.
      *
      * @param request request being sent
      */
@@ -1552,8 +1474,7 @@ public final class BOSHClient {
     }
 
     /**
-     * Notifies all response listeners that the specified response has been
-     * received.
+     * Notifies all response listeners that the specified response has been received.
      *
      * @param response response received
      */
@@ -1575,8 +1496,7 @@ public final class BOSHClient {
     }
 
     /**
-     * Notifies all connection listeners that the session has been successfully
-     * established.
+     * Notifies all connection listeners that the session has been successfully established.
      */
     private void fireConnectionEstablished() {
         final boolean hadLock = lock.isHeldByCurrentThread();
@@ -1604,8 +1524,7 @@ public final class BOSHClient {
     }
 
     /**
-     * Notifies all connection listeners that the session has been
-     * terminated normally.
+     * Notifies all connection listeners that the session has been terminated normally.
      */
     private void fireConnectionClosed() {
         assertUnlocked();
@@ -1624,8 +1543,7 @@ public final class BOSHClient {
     }
 
     /**
-     * Notifies all connection listeners that the session has been
-     * terminated due to the exceptional condition provided.
+     * Notifies all connection listeners that the session has been terminated due to the exceptional condition provided.
      *
      * @param cause cause of the termination
      */
@@ -1649,8 +1567,7 @@ public final class BOSHClient {
     }
 
     /**
-     * Class used in testing to dynamically manipulate received exchanges
-     * at test runtime.
+     * Class used in testing to dynamically manipulate received exchanges at test runtime.
      */
     abstract static class ExchangeInterceptor {
         /**
@@ -1664,24 +1581,20 @@ public final class BOSHClient {
          * Hook to manipulate an HTTPExchange as is is about to be processed.
          *
          * @param exch original exchange that would be processed
-         * @return replacement exchange instance, or {@code null} to skip
-         * processing of this exchange
+         * @return replacement exchange instance, or {@code null} to skip processing of this exchange
          */
         abstract HTTPExchange interceptExchange(final HTTPExchange exch);
     }
 
     /**
-     * Class represents a request processing thread. Each thread will claim
-     * exchange for processing in {@link #claimExchange(int)} and send
-     * the request. The number of processing threads is adjusted based on
-     * the value of {@link AttrRequests} in
-     * {@link #adjustRequestProcessorsPool()}, after it is received from the CM.
+     * Class represents a request processing thread. Each thread will claim exchange for processing in {@link #claimExchange(int)}
+     * and send the request. The number of processing threads is adjusted based on the value of {@link AttrRequests} in {@link
+     * #adjustRequestProcessorsPool()}, after it is received from the CM.
      */
     private class RequestProcessor implements Runnable {
 
         /**
-         * The index of request processor which identifies it's place in
-         * the {@link #procThreads} array.
+         * The index of request processor which identifies it's place in the {@link #procThreads} array.
          */
         private final int idx;
 
@@ -1698,8 +1611,7 @@ public final class BOSHClient {
         /**
          * Creates new <tt>RequestProcessor</tt>.
          *
-         * @param idx the request processor's index in
-         *            the {@link #procThreads} array.
+         * @param idx the request processor's index in the {@link #procThreads} array.
          */
         RequestProcessor(int idx) {
             this.idx = idx;
@@ -1723,8 +1635,7 @@ public final class BOSHClient {
         }
 
         /**
-         * Informs this request processor to stop (but the thread may not
-         * terminate immediately).
+         * Informs this request processor to stop (but the thread may not terminate immediately).
          */
         void dispose() {
             // The thread should stop
