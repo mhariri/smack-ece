@@ -4,7 +4,7 @@
     <groupId>com.github.mhariri</groupId>
     <artifactId>smack-ece</artifactId>
     <packaging>jar</packaging>
-    <version>1.0.6</version>
+    <version>1.0.7-SNAPSHOT</version>
 
     <name>smack-ece</name>
     <description>Library to connect to Cisco Enterprise Chat and Email (ECE) chat interface which is a modified version of XMPP over BOSH standard.</description>
@@ -47,7 +47,7 @@
         <dependency>
             <groupId>org.apache.httpcomponents</groupId>
             <artifactId>httpclient</artifactId>
-            <version>4.3.3</version>
+            <version>4.5.5</version>
         </dependency>
         <dependency>
             <groupId>org.apache.commons</groupId>
