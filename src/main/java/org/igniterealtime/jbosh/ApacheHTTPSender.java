@@ -90,6 +90,7 @@ final class ApacheHTTPSender implements HTTPSender {
         cm.setMaxTotal(100);
         RequestConfig rc = RequestConfig.custom()
                 .setExpectContinueEnabled(false)
+                .setContentCompressionEnabled(config.isCompressionEnabled())
                 .build();
         HttpClientBuilder httpClientBuilder = HttpClients.custom()
                 .setConnectionManager(cm)

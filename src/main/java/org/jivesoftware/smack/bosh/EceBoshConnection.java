@@ -325,6 +325,7 @@ public class EceBoshConnection extends AbstractXMPPConnection {
             body = body.rebuild().setAttribute(
                     BodyQName.create(BOSH_URI, "sid"), sessionID).build();
         }
+        LOGGER.log(Level.FINE, "Sending message:" + body.toXML());
         client.send(body);
     }
 
@@ -505,6 +506,7 @@ public class EceBoshConnection extends AbstractXMPPConnection {
         @Override
         public void responseReceived(BOSHMessageEvent event) {
             AbstractBody body = event.getBody();
+            LOGGER.log(Level.FINE, "Received message:" + body.toXML());
             if (body != null) {
                 try {
                     if (sessionID == null) {
