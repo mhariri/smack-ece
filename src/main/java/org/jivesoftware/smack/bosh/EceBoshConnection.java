@@ -83,6 +83,7 @@ public class EceBoshConnection extends AbstractXMPPConnection {
     private boolean notified;
     private EceEventDispatcher eceEventDispatcher = new EceEventDispatcher(this);
     private XmlMapper mapper = new XmlMapper();
+    private EceToXmppIncomingMessageConverter eceConverter = new EceToXmppIncomingMessageConverter(new MessageBodyDecoder());
 
     /**
      * Create a HTTP Binding connection to an XMPP server.
@@ -427,7 +428,7 @@ public class EceBoshConnection extends AbstractXMPPConnection {
 
     @Override
     protected void invokeStanzaCollectorsAndNotifyRecvListeners(Stanza packet) {
-        EceToXmppIncomingMessageConverter.process(packet);
+        eceConverter.process(packet);
         super.invokeStanzaCollectorsAndNotifyRecvListeners(packet);
     }
 
