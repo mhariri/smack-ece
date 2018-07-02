@@ -1,4 +1,4 @@
-package org.jivesoftware.smack.bosh;
+package org.jivesoftware.smack;
 
 import com.egain.bindings.chat.EgainParams;
 
@@ -6,7 +6,8 @@ import org.igniterealtime.jbosh.BOSHClient;
 import org.igniterealtime.jbosh.BOSHException;
 import org.igniterealtime.jbosh.ComposableBody;
 import org.igniterealtime.jbosh.SmackUtils;
-import org.jivesoftware.smack.SmackException;
+import org.jivesoftware.smack.bosh.BOSHConfiguration;
+import org.jivesoftware.smack.bosh.EceBoshConnection;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
@@ -59,7 +60,7 @@ public class EceBoshConnectionTest {
         })
                 .when(client)
                 .send(bodyCaptor.capture());
-        connection.connectInternal(client);
+        connection.connectInternal();
 
         assertThat(bodyCaptor.getValue().getPayloadXML(), containsString("<egainParams"));
     }

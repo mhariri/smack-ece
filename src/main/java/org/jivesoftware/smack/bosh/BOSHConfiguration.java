@@ -14,9 +14,7 @@
 package org.jivesoftware.smack.bosh;
 
 import org.apache.commons.codec.binary.Base64;
-import org.apache.http.Header;
 import org.apache.http.HttpHeaders;
-import org.apache.http.message.BasicHeader;
 import org.jivesoftware.smack.ConnectionConfiguration;
 import org.jivesoftware.smack.proxy.ProxyInfo;
 
@@ -26,8 +24,8 @@ import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLDecoder;
 import java.nio.charset.StandardCharsets;
-import java.util.ArrayList;
-import java.util.List;
+import java.util.HashMap;
+import java.util.Map;
 
 /**
  * Configuration to use while establishing the connection to the XMPP server via
@@ -39,7 +37,7 @@ public final class BOSHConfiguration extends ConnectionConfiguration {
 
     private final boolean https;
     private final String file;
-    private List<Header> httpHeaders;
+    private Map<String, String> httpHeaders;
 
     private BOSHConfiguration(Builder builder) {
         super(builder);
@@ -56,10 +54,6 @@ public final class BOSHConfiguration extends ConnectionConfiguration {
             file = builder.file;
         }
         httpHeaders = builder.httpHeaders;
-    }
-
-    public static Builder builder() {
-        return new Builder();
     }
 
     public boolean isProxyEnabled() {
@@ -87,14 +81,18 @@ public final class BOSHConfiguration extends ConnectionConfiguration {
         return new URI((https ? "https://" : "http://") + this.host + ":" + this.port + file);
     }
 
-    public List<Header> getHttpHeaders() {
+    public Map<String, String> getHttpHeaders() {
         return httpHeaders;
+    }
+
+    public static Builder builder() {
+        return new Builder();
     }
 
     public static final class Builder extends ConnectionConfiguration.Builder<Builder, BOSHConfiguration> {
         private boolean https;
         private String file;
-        private List<Header> httpHeaders = new ArrayList<>();
+        private Map<String, String> httpHeaders = new HashMap<>();
 
         private Builder() {
         }
@@ -122,8 +120,8 @@ public final class BOSHConfiguration extends ConnectionConfiguration {
             return this;
         }
 
-        public Builder addHttpHeader(Header header) {
-            httpHeaders.add(header);
+        public Builder addHttpHeader(String name, String value) {
+            httpHeaders.put(name, value);
             return this;
         }
 
@@ -143,7 +141,7 @@ public final class BOSHConfiguration extends ConnectionConfiguration {
                         auth.getBytes(StandardCharsets.ISO_8859_1));
                 String authHeader = "Basic " + new String(encodedAuth);
 
-                this.addHttpHeader(new BasicHeader(HttpHeaders.AUTHORIZATION, authHeader));
+                this.addHttpHeader(HttpHeaders.AUTHORIZATION, authHeader);
             } catch (UnsupportedEncodingException e) {
                 throw new RuntimeException(e);
             }

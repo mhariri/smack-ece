@@ -3,11 +3,10 @@ package org.jivesoftware.smack.bosh;
 import com.google.common.io.CharStreams;
 
 import com.egain.bindings.chat.EgainParams;
-import com.fasterxml.jackson.core.JsonProcessingException;
 import com.fasterxml.jackson.dataformat.xml.XmlMapper;
 
-import org.apache.http.Header;
 import org.igniterealtime.jbosh.AbstractBody;
+import org.igniterealtime.jbosh.AttrVersion;
 import org.igniterealtime.jbosh.BOSHClient;
 import org.igniterealtime.jbosh.BOSHClientConfig;
 import org.igniterealtime.jbosh.BOSHClientConnEvent;
@@ -19,6 +18,10 @@ import org.igniterealtime.jbosh.BOSHMessageEvent;
 import org.igniterealtime.jbosh.BodyQName;
 import org.igniterealtime.jbosh.ComposableBody;
 import org.jivesoftware.smack.AbstractXMPPConnection;
+import org.jivesoftware.smack.XMPPBOSHConnection;
+import org.jivesoftware.smack.XMPPException.StreamErrorException;
+import org.jivesoftware.smack.SmackException.ConnectionException;
+import org.jivesoftware.smack.SmackException.NotConnectedException;
 import org.jivesoftware.smack.SmackException;
 import org.jivesoftware.smack.XMPPException;
 import org.jivesoftware.smack.packet.Element;
@@ -27,8 +30,9 @@ import org.jivesoftware.smack.packet.Message;
 import org.jivesoftware.smack.packet.Nonza;
 import org.jivesoftware.smack.packet.Presence;
 import org.jivesoftware.smack.packet.Stanza;
-import org.jivesoftware.smack.packet.XMPPError;
-import org.jivesoftware.smack.sasl.packet.SaslStreamElements;
+import org.jivesoftware.smack.packet.StanzaError;
+import org.jivesoftware.smack.sasl.packet.SaslStreamElements.SASLFailure;
+import org.jivesoftware.smack.sasl.packet.SaslStreamElements.Success;
 import org.jivesoftware.smack.util.PacketParserUtils;
 import org.jxmpp.jid.parts.Resourcepart;
 import org.xmlpull.v1.XmlPullParser;
@@ -40,21 +44,15 @@ import java.io.PipedReader;
 import java.io.PipedWriter;
 import java.io.StringReader;
 import java.io.Writer;
-import java.net.URISyntaxException;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 import static com.egain.bindings.chat.Constants.EGAIN_NS;
+import static org.jivesoftware.smack.XMPPBOSHConnection.BOSH_URI;
+import static org.jivesoftware.smack.XMPPBOSHConnection.XMPP_BOSH_NS;
 
 public class EceBoshConnection extends AbstractXMPPConnection {
-    /**
-     * The XMPP Over Bosh namespace.
-     */
-    public static final String XMPP_BOSH_NS = "urn:xmpp:xbosh";
-    /**
-     * The BOSH namespace from XEP-0124.
-     */
-    public static final String BOSH_URI = "http://jabber.org/protocol/httpbind";
     public static final String EGAIN_FROM = "from";
     public static final String EGAIN_AUTHID = "authid";
     public static final String AGENT_JOIN_MSG = "agent_join_msg";
@@ -125,29 +123,48 @@ public class EceBoshConnection extends AbstractXMPPConnection {
     }
 
 
-    protected void connectInternal(BOSHClient client) throws SmackException, InterruptedException {
+    protected void connectInternal() throws SmackException, InterruptedException {
 
         done = false;
         notified = false;
-
-        client.addBOSHClientConnListener(new EceBoshConnection.BOSHConnectionListener());
-        client.addBOSHClientResponseListener(new EceBoshConnection.BOSHPacketReader());
-
-        // Initialize the debugger
-        if (config.isDebuggerEnabled()) {
-            initDebugger();
-            if (isFirstInitialization) {
-                if (debugger.getReaderListener() != null) {
-                    addAsyncStanzaListener(debugger.getReaderListener(), null);
-                }
-                if (debugger.getWriterListener() != null) {
-                    addStanzaSendingListener(debugger.getWriterListener(), null);
-                }
-            }
-        }
-
-        // Send the session creation request
         try {
+            // Ensure a clean starting state
+            if (client != null) {
+                client.close();
+                client = null;
+            }
+            sessionID = null;
+
+            // Initialize BOSH client
+            BOSHClientConfig.Builder cfgBuilder = BOSHClientConfig.Builder
+                    .create(config.getURI(), config.getXMPPServiceDomain().toString());
+            if (config.isProxyEnabled()) {
+                cfgBuilder.setProxy(config.getProxyAddress(), config.getProxyPort());
+            }
+            for(Map.Entry<String, String> h: config.getHttpHeaders().entrySet()) {
+                cfgBuilder.addHttpHeader(h.getKey(), h.getValue());
+            }
+            if (null != config.getCustomSSLContext()) {
+                cfgBuilder.setSSLContext(config.getCustomSSLContext());
+            }
+            try {
+                cfgBuilder.setBoshVersion(AttrVersion.createFromString("1.6"));
+            } catch (BOSHException e) {
+                throw new RuntimeException(e);
+            }
+
+            cfgBuilder.setXMLLang("en-US");
+
+            client = BOSHClient.create(cfgBuilder.build());
+
+            client.addBOSHClientConnListener(new BOSHConnectionListener());
+            client.addBOSHClientResponseListener(new BOSHPacketReader());
+
+            // Initialize the debugger
+            if (debugger != null) {
+                initDebugger();
+            }
+
             client.send(ComposableBody.builder()
                     .setNamespaceDefinition("xmpp", XMPP_BOSH_NS)
                     .setAttribute(BodyQName.createWithPrefix(XMPP_BOSH_NS, "version", "xmpp"), "1.0")
@@ -156,12 +173,13 @@ public class EceBoshConnection extends AbstractXMPPConnection {
                     .setAttribute(BodyQName.create(EGAIN_NS, "content"), "text/xml; charset=utf-8")
                     .setPayloadXML(mapper.writeValueAsString(params))
                     .build());
-            authenticated = true;
-        } catch (BOSHException e) {
-            throw new SmackException.ConnectionException(e);
-        } catch (JsonProcessingException e) {
-            throw new RuntimeException(e);
+
+        } catch (Exception e) {
+            throw new ConnectionException(e);
         }
+
+        authenticated = true;
+
 
 
         // Wait for the response from the server
@@ -188,40 +206,6 @@ public class EceBoshConnection extends AbstractXMPPConnection {
     }
 
     @Override
-    protected void connectInternal() throws SmackException, InterruptedException {
-        // Ensure a clean starting state
-        if (client != null) {
-            client.close();
-            client = null;
-        }
-        sessionID = null;
-
-        // Initialize BOSH client
-        BOSHClientConfig.Builder cfgBuilder = null;
-        try {
-            cfgBuilder = BOSHClientConfig.Builder
-                    .create(config.getURI(), config.getXMPPServiceDomain().toString());
-            if (config.isProxyEnabled()) {
-                cfgBuilder.setProxy(config.getProxyAddress(), config.getProxyPort());
-            }
-            if (null != config.getCustomSSLContext()) {
-                cfgBuilder.setSSLContext(config.getCustomSSLContext());
-            }
-            for (Header h : config.getHttpHeaders()) {
-                cfgBuilder.addHttpHeader(h);
-            }
-
-            cfgBuilder.setXMLLang("en-US");
-
-            client = BOSHClient.create(cfgBuilder.build());
-            connectInternal(client);
-        } catch (URISyntaxException e) {
-            throw new SmackException.ConnectionException(e);
-        }
-
-    }
-
-    @Override
     public boolean isSecureConnection() {
         // TODO: Implement SSL usage
         return false;
@@ -245,25 +229,21 @@ public class EceBoshConnection extends AbstractXMPPConnection {
     }
 
     @Override
-    public void sendNonza(Nonza element) throws SmackException.NotConnectedException {
+    public void sendNonza(Nonza element) throws NotConnectedException {
         if (done) {
-            throw new SmackException.NotConnectedException();
+            throw new NotConnectedException();
         }
         sendElement(element);
     }
 
     @Override
-    protected void sendStanzaInternal(Stanza packet) throws SmackException.NotConnectedException {
+    protected void sendStanzaInternal(Stanza packet) throws NotConnectedException {
         sendElement(packet);
     }
 
     private void sendElement(Element element) {
         try {
-            String x = element.toXML().toString();
-            // TODO: seems to be fixed in 4.4.0 version of Smack, so this goes away after upgrading
-            x = x.replaceFirst("<message ", "<message xmlns='jabber:client' ");
-            x = x.replaceFirst("<presence id='[^']+' ", "<presence xmlns='jabber:client' ");
-            send(ComposableBody.builder().setPayloadXML(x).build());
+            send(ComposableBody.builder().setPayloadXML(element.toXML(BOSH_URI).toString()).build());
             if (element instanceof Stanza) {
                 firePacketSendingListeners((Stanza) element);
             }
@@ -511,10 +491,10 @@ public class EceBoshConnection extends AbstractXMPPConnection {
             if (body != null) {
                 try {
                     if (sessionID == null) {
-                        sessionID = body.getAttribute(BodyQName.create(EceBoshConnection.BOSH_URI, "sid"));
+                        sessionID = body.getAttribute(BodyQName.create(XMPPBOSHConnection.BOSH_URI, "sid"));
                     }
                     if (streamId == null) {
-                        streamId = body.getAttribute(BodyQName.create(EceBoshConnection.BOSH_URI, "authid"));
+                        streamId = body.getAttribute(BodyQName.create(XMPPBOSHConnection.BOSH_URI, "authid"));
                     }
                     final XmlPullParser parser = XmlPullParserFactory.newInstance().newPullParser();
                     parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, true);
@@ -539,11 +519,11 @@ public class EceBoshConnection extends AbstractXMPPConnection {
                                         break;
                                     case "success":
                                         send(ComposableBody.builder().setNamespaceDefinition("xmpp",
-                                                EceBoshConnection.XMPP_BOSH_NS).setAttribute(
-                                                BodyQName.createWithPrefix(EceBoshConnection.XMPP_BOSH_NS, "restart",
+                                                XMPPBOSHConnection.XMPP_BOSH_NS).setAttribute(
+                                                BodyQName.createWithPrefix(XMPPBOSHConnection.XMPP_BOSH_NS, "restart",
                                                         "xmpp"), "true").setAttribute(
-                                                BodyQName.create(EceBoshConnection.BOSH_URI, "to"), getXMPPServiceDomain().toString()).build());
-                                        SaslStreamElements.Success success = new SaslStreamElements.Success(parser.nextText());
+                                                BodyQName.create(XMPPBOSHConnection.BOSH_URI, "to"), getXMPPServiceDomain().toString()).build());
+                                        Success success = new Success(parser.nextText());
                                         getSASLAuthentication().authenticated(success);
                                         break;
                                     case "features":
@@ -551,16 +531,16 @@ public class EceBoshConnection extends AbstractXMPPConnection {
                                         break;
                                     case "failure":
                                         if ("urn:ietf:params:xml:ns:xmpp-sasl".equals(parser.getNamespace(null))) {
-                                            final SaslStreamElements.SASLFailure failure = PacketParserUtils.parseSASLFailure(parser);
+                                            final SASLFailure failure = PacketParserUtils.parseSASLFailure(parser);
                                             getSASLAuthentication().authenticationFailed(failure);
                                         }
                                         break;
                                     case "error":
                                         // Some BOSH error isn't stream error.
                                         if ("urn:ietf:params:xml:ns:xmpp-streams".equals(parser.getNamespace(null))) {
-                                            throw new XMPPException.StreamErrorException(PacketParserUtils.parseStreamError(parser));
+                                        throw new StreamErrorException(PacketParserUtils.parseStreamError(parser));
                                         } else {
-                                            XMPPError.Builder builder = PacketParserUtils.parseError(parser);
+                                            StanzaError.Builder builder = PacketParserUtils.parseError(parser);
                                             throw new XMPPException.XMPPErrorException(null, builder.build());
                                         }
                                     case "body":
@@ -574,7 +554,8 @@ public class EceBoshConnection extends AbstractXMPPConnection {
                         }
                     }
                     while (eventType != XmlPullParser.END_DOCUMENT);
-                } catch (Exception e) {
+                }
+                catch (Exception e) {
                     if (isConnected()) {
                         notifyConnectionError(e);
                     }

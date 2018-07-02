@@ -1,5 +1,6 @@
-package org.jivesoftware.smack.bosh;
+package org.jivesoftware.smack;
 
+import org.jivesoftware.smack.bosh.MessageBodyDecoder;
 import org.junit.Test;
 
 import java.io.UnsupportedEncodingException;
